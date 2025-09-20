@@ -26,37 +26,46 @@ export function LinkCard({ link, onView, onEdit }: LinkCardProps) {
   };
 
   return (
-    <Card className="hover:shadow-md transition-shadow">
+    <Card className="hover:shadow-lg transition-all duration-200 border-0 bg-white">
       <CardContent className="p-6">
         <div className="flex items-start justify-between">
-          <div className="flex items-start space-x-3 flex-1">
+          <div className="flex items-start space-x-4 flex-1">
             {/* Link Icon */}
             <div className="flex-shrink-0">
-              <div className="w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center">
-                <img src="/dark_blue_link.png" alt="Link" className="w-6 h-6" />
+              <div className="w-12 h-12 bg-blue-50 rounded-lg flex items-center justify-center">
+                <img src="/dark_blue_link.png" alt="Link" className="w-7 h-7" />
               </div>
             </div>
 
             {/* Link Details */}
             <div className="flex-1 min-w-0">
-              <h3 className="text-sm font-medium text-gray-900 truncate">
+              <h3 className="text-base font-semibold text-gray-900 mb-1 truncate">
                 {link.name}
               </h3>
-              <p className="text-sm text-gray-500 truncate mt-1">{link.url}</p>
-              <div className="flex items-center mt-2 space-x-2">
+              <p className="text-sm text-gray-600 truncate mb-3">{link.url}</p>
+              <div className="flex items-center space-x-2 mb-3">
                 <Badge
                   variant="secondary"
-                  className={`text-xs ${getCategoryColor(link.category)}`}
+                  className={`text-xs font-medium ${getCategoryColor(
+                    link.category
+                  )}`}
                 >
                   {link.category}
                 </Badge>
                 <Badge
                   variant={link.status === "active" ? "default" : "secondary"}
-                  className="text-xs"
+                  className={`text-xs font-medium ${
+                    link.status === "active"
+                      ? "bg-green-100 text-green-800"
+                      : "bg-gray-100 text-gray-800"
+                  }`}
                 >
                   {link.status}
                 </Badge>
               </div>
+              <p className="text-sm text-gray-500">
+                <span className="font-medium">{link.clicks}</span> clicks
+              </p>
             </div>
           </div>
 
@@ -66,18 +75,18 @@ export function LinkCard({ link, onView, onEdit }: LinkCardProps) {
               variant="outline"
               size="sm"
               onClick={() => onView?.(link)}
-              className="h-8 px-3"
+              className="h-9 px-4 border-gray-300 hover:bg-gray-50"
             >
-              <Eye className="h-4 w-4 mr-1" />
+              <Eye className="h-4 w-4 mr-2" />
               View
             </Button>
             <Button
               variant="outline"
               size="sm"
               onClick={() => onEdit?.(link)}
-              className="h-8 px-3"
+              className="h-9 px-4 border-gray-300 hover:bg-gray-50"
             >
-              <Edit className="h-4 w-4 mr-1" />
+              <Edit className="h-4 w-4 mr-2" />
               Edit
             </Button>
           </div>

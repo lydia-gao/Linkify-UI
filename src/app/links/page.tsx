@@ -121,21 +121,51 @@ export default function LinksPage() {
         <Navbar />
 
         <main className="flex-1 overflow-x-hidden overflow-y-auto bg-gray-50">
-          <div className="container mx-auto px-6 py-8">
+          <div className="container mx-auto px-6 py-8 max-w-7xl">
             {/* Header */}
-            <div className="flex items-center justify-between mb-8">
-              <div>
-                <h1 className="text-3xl font-bold text-gray-900">All Links</h1>
-                <p className="text-gray-600 mt-1">
-                  Manage and track all your links in one place.
-                </p>
+            <div className="mb-8">
+              <div className="flex items-center justify-between mb-6">
+                <div>
+                  <h1 className="text-3xl font-bold text-gray-900 mb-2">
+                    All Links
+                  </h1>
+                  <p className="text-gray-600">
+                    Manage and track all your links in one place.
+                  </p>
+                </div>
+                <Link href="/links/new">
+                  <Button className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2">
+                    <Plus className="mr-2 h-4 w-4" />
+                    Create New
+                  </Button>
+                </Link>
               </div>
-              <Link href="/links/new">
-                <Button className="bg-blue-600 hover:bg-blue-700 text-white">
-                  <Plus className="mr-2 h-4 w-4" />
-                  Create New
-                </Button>
-              </Link>
+
+              {/* Filters */}
+              <div className="flex items-center space-x-4">
+                <div className="flex items-center space-x-2">
+                  <span className="text-sm font-medium text-gray-700">
+                    Filter by:
+                  </span>
+                  <select className="px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                    <option>All Categories</option>
+                    <option>Google</option>
+                    <option>Social</option>
+                    <option>Email</option>
+                    <option>Direct</option>
+                  </select>
+                </div>
+                <div className="flex items-center space-x-2">
+                  <span className="text-sm font-medium text-gray-700">
+                    Status:
+                  </span>
+                  <select className="px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                    <option>All Status</option>
+                    <option>Active</option>
+                    <option>Inactive</option>
+                  </select>
+                </div>
+              </div>
             </div>
 
             {/* Links Grid */}
