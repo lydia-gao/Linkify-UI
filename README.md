@@ -1,36 +1,110 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Linkify - Link Management Platform
+
+A modern full-stack web application for managing and tracking links, built with Next.js, TypeScript, and Tailwind CSS.
+
+## Features
+
+- **Authentication**: Login and registration pages with Google OAuth integration (UI only)
+- **Dashboard**: Analytics overview with stats cards, charts, and recent activity
+- **Link Management**: Create, view, edit, and organize links with categories and tags
+- **Responsive Design**: Modern UI with shadcn/ui components and Tailwind CSS
+- **State Management**: Redux Toolkit for global state management
+
+## Tech Stack
+
+- **Frontend**: Next.js 15 (App Router) + TypeScript
+- **Styling**: Tailwind CSS + shadcn/ui components
+- **State Management**: Redux Toolkit + React Redux
+- **Icons**: Lucide React
+- **Development**: ESLint + TypeScript
+
+## Project Structure
+
+```
+src/
+├── app/                  # Next.js App Router pages
+│   ├── layout.tsx        # Root layout with Redux provider
+│   ├── page.tsx          # Landing page (redirects to login)
+│   ├── login/page.tsx    # Login page
+│   ├── register/page.tsx # Registration page
+│   ├── dashboard/page.tsx # Dashboard with analytics
+│   └── links/
+│       ├── page.tsx      # Links list page
+│       └── new/page.tsx  # Create/edit link page
+├── components/           # Reusable UI components
+│   ├── ui/              # shadcn/ui components
+│   ├── Sidebar.tsx      # Navigation sidebar
+│   ├── Navbar.tsx       # Top navigation bar
+│   ├── LinkCard.tsx     # Link display card
+│   └── FormInput.tsx    # Form input component
+├── lib/                 # Utility functions
+├── store/               # Redux Toolkit store and slices
+├── styles/              # Global CSS and Tailwind config
+└── types/               # TypeScript type definitions
+```
 
 ## Getting Started
 
-First, run the development server:
+1. **Install dependencies**:
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+   ```bash
+   npm install
+   ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+2. **Run the development server**:
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+   ```bash
+   npm run dev
+   ```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+3. **Open your browser**:
+   Navigate to [http://localhost:3000](http://localhost:3000)
 
-## Learn More
+## Pages Overview
 
-To learn more about Next.js, take a look at the following resources:
+### Authentication
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+- **Login Page** (`/login`): Clean login form with Google OAuth button
+- **Register Page** (`/register`): Registration form with terms acceptance
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+### Dashboard (`/dashboard`)
 
-## Deploy on Vercel
+- **Stats Cards**: Total links, clicks, and revenue with percentage changes
+- **Analytics Chart**: Clicks over time visualization
+- **Revenue Breakdown**: Revenue by source/category
+- **Recent Activity**: Table of recent clicks and transactions
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+### Link Management
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+- **Links List** (`/links`): Grid view of all links with pagination
+- **Create Link** (`/links/new`): Form to create new links with categories and tags
+
+## Mock Data
+
+The application currently uses mock data for demonstration:
+
+- Sample user profile in Redux auth slice
+- 5 sample links with various categories and stats
+- Dashboard analytics with realistic metrics
+- Recent clicks and revenue data
+
+## Next Steps
+
+This is a static UI implementation. To make it fully functional:
+
+1. **Backend Integration**: Connect to a real API using Axios
+2. **Authentication**: Implement real login/logout with JWT tokens
+3. **Database**: Add database integration for persistent data
+4. **Real-time Updates**: Add WebSocket support for live updates
+5. **Testing**: Add unit and integration tests
+6. **Deployment**: Set up CI/CD and deploy to production
+
+## Development
+
+- **Linting**: `npm run lint`
+- **Build**: `npm run build`
+- **Start**: `npm start`
+
+## License
+
+© 2023 Linkify. All rights reserved.
