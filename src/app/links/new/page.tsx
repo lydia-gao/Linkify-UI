@@ -52,38 +52,36 @@ export default function CreateLinkPage() {
   };
 
   return (
-    <div className="flex h-screen bg-gray-50">
+    <div className="flex min-h-screen bg-gray-50">
       <Sidebar />
-
       <div className="flex-1 flex flex-col overflow-hidden">
         <Navbar />
-
         <main className="flex-1 overflow-x-hidden overflow-y-auto bg-gray-50">
-          <div className="container mx-auto px-6 py-8 max-w-7xl">
-            <div className="mb-8">
-              <h1 className="text-3xl font-bold text-gray-900 mb-2">
+          <div className="mx-auto px-4 py-8 max-w-6xl">
+            <div className="mb-6">
+              <h1 className="text-2xl font-bold text-gray-900 mb-1">
                 Link Details
               </h1>
-              <p className="text-gray-600">
+              <p className="text-gray-500">
                 Create a new link or edit existing one.
               </p>
             </div>
-
-            <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-              <div className="lg:col-span-2 space-y-6">
-                <Card className="shadow-sm border-0 bg-white">
-                  <CardHeader className="pb-4">
-                    <CardTitle className="text-lg font-semibold text-gray-900">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+              {/* 左侧表单区 */}
+              <div className="md:col-span-2">
+                <Card className="shadow border bg-white">
+                  <CardHeader className="pb-2">
+                    <CardTitle className="text-base font-semibold text-gray-900">
                       Link Information
                     </CardTitle>
                   </CardHeader>
-                  <CardContent className="space-y-6">
-                    <form onSubmit={handleSubmit} className="space-y-6">
-                      <div className="grid grid-cols-1 gap-6">
+                  <CardContent>
+                    <form onSubmit={handleSubmit} className="space-y-5">
+                      <div className="grid grid-cols-1 gap-5">
                         <div>
                           <label
                             htmlFor="linkName"
-                            className="block text-sm font-medium text-gray-700 mb-2"
+                            className="block text-sm font-medium text-gray-700 mb-1"
                           >
                             Link Name *
                           </label>
@@ -96,14 +94,13 @@ export default function CreateLinkPage() {
                               handleInputChange("linkName", e.target.value)
                             }
                             required
-                            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors"
+                            className="w-full px-3 py-2 border border-gray-300 rounded focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                           />
                         </div>
-
                         <div>
                           <label
                             htmlFor="description"
-                            className="block text-sm font-medium text-gray-700 mb-2"
+                            className="block text-sm font-medium text-gray-700 mb-1"
                           >
                             Description
                           </label>
@@ -114,15 +111,14 @@ export default function CreateLinkPage() {
                             onChange={(e) =>
                               handleInputChange("description", e.target.value)
                             }
-                            rows={3}
-                            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors resize-none"
+                            rows={2}
+                            className="w-full px-3 py-2 border border-gray-300 rounded focus:ring-2 focus:ring-blue-500 focus:border-blue-500 resize-none"
                           />
                         </div>
-
                         <div>
                           <label
                             htmlFor="url"
-                            className="block text-sm font-medium text-gray-700 mb-2"
+                            className="block text-sm font-medium text-gray-700 mb-1"
                           >
                             URL *
                           </label>
@@ -135,15 +131,14 @@ export default function CreateLinkPage() {
                               handleInputChange("url", e.target.value)
                             }
                             required
-                            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors"
+                            className="w-full px-3 py-2 border border-gray-300 rounded focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                           />
                         </div>
-
                         <div className="grid grid-cols-2 gap-4">
                           <div>
                             <label
                               htmlFor="category"
-                              className="block text-sm font-medium text-gray-700 mb-2"
+                              className="block text-sm font-medium text-gray-700 mb-1"
                             >
                               Category *
                             </label>
@@ -154,7 +149,7 @@ export default function CreateLinkPage() {
                                 handleInputChange("category", e.target.value)
                               }
                               required
-                              className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors"
+                              className="w-full px-3 py-2 border border-gray-300 rounded focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                             >
                               <option value="">Select category</option>
                               {categoryOptions.map((option) => (
@@ -164,11 +159,10 @@ export default function CreateLinkPage() {
                               ))}
                             </select>
                           </div>
-
                           <div>
                             <label
                               htmlFor="ownerName"
-                              className="block text-sm font-medium text-gray-700 mb-2"
+                              className="block text-sm font-medium text-gray-700 mb-1"
                             >
                               Owner Name *
                             </label>
@@ -181,17 +175,16 @@ export default function CreateLinkPage() {
                                 handleInputChange("ownerName", e.target.value)
                               }
                               required
-                              className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors"
+                              className="w-full px-3 py-2 border border-gray-300 rounded focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                             />
                           </div>
                         </div>
-
                         <div className="grid grid-cols-2 gap-4">
                           <div>
-                            <label className="block text-sm font-medium text-gray-700 mb-3">
+                            <label className="block text-sm font-medium text-gray-700 mb-1">
                               Status
                             </label>
-                            <div className="flex items-center space-x-3">
+                            <div className="flex items-center space-x-2">
                               <input
                                 type="checkbox"
                                 id="status"
@@ -209,11 +202,10 @@ export default function CreateLinkPage() {
                               </label>
                             </div>
                           </div>
-
                           <div>
                             <label
                               htmlFor="expirationDays"
-                              className="block text-sm font-medium text-gray-700 mb-2"
+                              className="block text-sm font-medium text-gray-700 mb-1"
                             >
                               Expiration (Days)
                             </label>
@@ -228,7 +220,7 @@ export default function CreateLinkPage() {
                                   e.target.value
                                 )
                               }
-                              className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors"
+                              className="w-full px-3 py-2 border border-gray-300 rounded focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                             />
                           </div>
                         </div>
@@ -237,21 +229,21 @@ export default function CreateLinkPage() {
                   </CardContent>
                 </Card>
               </div>
-
-              <div className="space-y-6">
-                <Card className="shadow-sm border-0 bg-white">
-                  <CardHeader className="pb-4">
-                    <CardTitle className="text-lg font-semibold text-gray-900">
+              {/* 右侧图片区 */}
+              <div className="flex flex-col gap-6">
+                <Card className="shadow border bg-white">
+                  <CardHeader className="pb-2">
+                    <CardTitle className="text-base font-semibold text-gray-900">
                       Link Gallery
                     </CardTitle>
-                    <p className="text-sm text-gray-600">
+                    <p className="text-xs text-gray-500">
                       Upload images for your link
                     </p>
                   </CardHeader>
-                  <CardContent className="space-y-4">
-                    <div className="border-2 border-dashed border-gray-300 rounded-lg p-8 text-center hover:border-blue-400 hover:bg-blue-50 transition-colors">
-                      <Upload className="mx-auto h-12 w-12 text-gray-400 mb-4" />
-                      <p className="text-sm text-gray-600 mb-2">
+                  <CardContent>
+                    <div className="border-2 border-dashed border-gray-300 rounded-lg p-4 text-center hover:border-blue-400 hover:bg-blue-50 transition-colors cursor-pointer">
+                      <Upload className="mx-auto h-8 w-8 text-gray-400 mb-2" />
+                      <p className="text-xs text-gray-500 mb-1">
                         Drag & drop your image here or click to upload
                       </p>
                       <Button
@@ -262,20 +254,19 @@ export default function CreateLinkPage() {
                         Choose File
                       </Button>
                     </div>
-
-                    {/* Sample existing images */}
-                    <div className="space-y-3">
-                      <p className="text-sm font-medium text-gray-700">
+                    {/* 图片列表 */}
+                    <div className="mt-4">
+                      <p className="text-xs font-medium text-gray-700 mb-2">
                         Existing Images:
                       </p>
                       <div className="grid grid-cols-2 gap-3">
                         {[1, 2, 3, 4].map((i) => (
                           <div key={i} className="relative group">
-                            <div className="aspect-square bg-gray-100 rounded-lg flex items-center justify-center">
+                            <div className="aspect-square bg-gray-100 rounded-lg flex items-center justify-center overflow-hidden">
                               <img
                                 src="/horizontal_link.png"
                                 alt="Link"
-                                className="w-8 h-8 opacity-50"
+                                className="w-16 h-16 object-contain opacity-80"
                               />
                             </div>
                             <button className="absolute -top-2 -right-2 w-6 h-6 bg-red-500 text-white rounded-full text-xs opacity-0 group-hover:opacity-100 transition-opacity">
@@ -289,37 +280,36 @@ export default function CreateLinkPage() {
                 </Card>
               </div>
             </div>
-
-            <div className="flex items-center justify-end space-x-4 mt-8 pt-6 border-t border-gray-200">
+            {/* 按钮区 */}
+            <div className="flex items-center justify-end gap-3 mt-8 pt-6 border-t border-gray-200">
               <Button
                 type="button"
                 variant="outline"
                 onClick={handleCancel}
-                className="px-6 py-2 border-gray-300 hover:bg-gray-50"
+                className="px-5 py-2 border-gray-300 hover:bg-gray-50"
               >
                 Cancel
               </Button>
               <Button
                 type="button"
                 variant="outline"
-                className="px-6 py-2 border-red-300 text-red-600 hover:bg-red-50"
+                className="px-5 py-2 border-red-300 text-red-600 hover:bg-red-50"
               >
                 Delete
               </Button>
               <Button
                 type="submit"
                 onClick={handleSubmit}
-                className="px-6 py-2 bg-blue-600 hover:bg-blue-700 text-white"
+                className="px-5 py-2 bg-blue-600 hover:bg-blue-700 text-white"
               >
                 Save
               </Button>
             </div>
           </div>
-
-          <footer className="bg-white border-t px-6 py-4">
-            <div className="flex items-center justify-between text-sm text-gray-500">
+          <footer className="bg-white border-t px-4 py-4 mt-8">
+            <div className="flex items-center justify-between text-xs text-gray-500">
               <div>© 2023 Linkify. All rights reserved.</div>
-              <div className="flex items-center space-x-4">
+              <div className="flex items-center gap-3">
                 <a href="#" className="hover:text-gray-700">
                   Terms
                 </a>

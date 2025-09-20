@@ -79,3 +79,4 @@ export type LinkCategory =
   | "Direct"
   | "Ad SEO"
   | "Affiliate";
+
