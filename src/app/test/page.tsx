@@ -1,7 +1,7 @@
 export default function TestPage() {
   return (
-    <div className="min-h-screen flex items-center justify-center">
-      <h1 className="text-4xl font-bold">Test Page</h1>
+    <div className="h-screen flex items-center justify-center bg-red-500">
+      <h1 className="text-4xl font-bold text-white">Tailwind Works 🎉</h1>
     </div>
   );
 }

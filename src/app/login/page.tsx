@@ -1,131 +1,112 @@
 "use client";
 
 import { useState } from "react";
-import { useRouter } from "next/navigation";
-import { useDispatch, useSelector } from "react-redux";
-import { RootState, AppDispatch } from "@/store";
-import { loginUser, googleAuth } from "@/store/slices/authSlice";
-import { AuthLayout } from "@/components/layouts/AuthLayout";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Checkbox } from "@/components/ui/checkbox";
-import { Label } from "@/components/ui/label";
+import Image from "next/image";
 
 export default function LoginPage() {
-  const router = useRouter();
-  const dispatch = useDispatch<AppDispatch>();
-  const { isLoading, error } = useSelector((state: RootState) => state.auth);
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [remember, setRemember] = useState(true);
 
-  const [formData, setFormData] = useState({
-    email: "",
-    password: "",
-    keepLoggedIn: true,
-  });
-
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-
-    try {
-      await dispatch(
-        loginUser({
-          email: formData.email,
-          password: formData.password,
-        })
-      ).unwrap();
-
-      router.push("/dashboard");
-    } catch (error) {
-      console.error("Login failed:", error);
-    }
-  };
-
-  const handleGoogleLogin = async () => {
-    try {
-      await dispatch(googleAuth()).unwrap();
-      router.push("/dashboard");
-    } catch (error) {
-      console.error("Google login failed:", error);
-    }
+    console.log("Login submit:", { email, password, remember });
+    // TODO: dispatch Redux action like loginUser({ email, password })
   };
 
   return (
-    <AuthLayout title="Login" subtitle="Forgot your password?">
-      <form onSubmit={handleSubmit} className="space-y-4">
-        <div className="space-y-4">
-          <Input
-            type="email"
-            placeholder="Email"
-            value={formData.email}
-            onChange={(e) =>
-              setFormData((prev) => ({ ...prev, email: e.target.value }))
-            }
-            className="w-full"
-            required
-          />
-          <Input
-            type="password"
-            placeholder="Password"
-            value={formData.password}
-            onChange={(e) =>
-              setFormData((prev) => ({ ...prev, password: e.target.value }))
-            }
-            className="w-full"
-            required
-          />
-
-          <div className="flex items-start gap-2 text-sm">
-            <Checkbox
-              id="keepLoggedIn"
-              checked={formData.keepLoggedIn}
-              onCheckedChange={(checked) =>
-                setFormData((prev) => ({ ...prev, keepLoggedIn: !!checked }))
-              }
-            />
-            <Label htmlFor="keepLoggedIn" className="text-sm">
-              Keep me logged in - applies to all log in options below.
-              <br />
-              More info
-            </Label>
-          </div>
+    <div className="h-screen flex">
+      {/* Left side (background + logo) */}
+      <div className="hidden md:flex w-1/2 relative">
+        <Image
+          src="/white_link.png"
+          alt="background"
+          fill
+          className="object-cover"
+          priority
+        />
+        <div className="absolute top-12 left-1/2 -translate-x-1/2">
+          <Image src="/logo.png" alt="Linkify Logo" width={120} height={40} />
         </div>
+      </div>
 
-        {error && <div className="text-red-500 text-sm">{error}</div>}
+      {/* Right side (form area) */}
+      <div className="flex w-full md:w-1/2 justify-center items-center px-8">
+        <div className="max-w-md w-full space-y-6">
+          {/* Title */}
+          <div className="flex justify-between items-center">
+            <h2 className="text-2xl font-bold">Login</h2>
+            <a href="#" className="text-sm text-blue-600 hover:underline">
+              Forgot your password?
+            </a>
+          </div>
 
-        <Button type="submit" className="w-full" disabled={isLoading}>
-          {isLoading ? "Logging in..." : "EMAIL LOGIN →"}
-        </Button>
+          {/* Form */}
+          <form onSubmit={handleSubmit} className="space-y-4">
+            <input
+              type="email"
+              placeholder="Email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              className="form-input"
+            />
 
-        <Button
-          type="button"
-          variant="outline"
-          className="w-full flex items-center justify-center gap-2"
-          onClick={handleGoogleLogin}
-          disabled={isLoading}
-        >
-          <img
-            src="https://www.svgrepo.com/show/475656/google-color.svg"
-            alt="Google"
-            className="w-5 h-5"
-          />
-          <span className="font-medium">Google</span>
-        </Button>
-      </form>
+            <input
+              type="password"
+              placeholder="Password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              className="form-input"
+            />
 
-      <p className="text-xs text-gray-500">
-        By clicking 'Log In' you agree to our website LinkifyClub{" "}
-        <a href="#" className="text-blue-600 underline">
-          Terms & Conditions
-        </a>
-        ,{" "}
-        <a href="#" className="text-blue-600 underline">
-          Privacy Notice
-        </a>{" "}
-        and{" "}
-        <a href="#" className="text-blue-600 underline">
-          Terms & Conditions
-        </a>
-        .
-      </p>
-    </AuthLayout>
+            <label className="flex items-start gap-2 text-sm">
+              <input
+                type="checkbox"
+                checked={remember}
+                onChange={(e) => setRemember(e.target.checked)}
+                className="mt-1"
+              />
+              <span>
+                Keep me logged in – applies to all log in options below.
+                <br />
+                More info
+              </span>
+            </label>
+
+            <button type="submit" className="btn-primary">
+              EMAIL LOGIN →
+            </button>
+          </form>
+
+          {/* Google Login */}
+          <button className="btn-secondary">
+            <Image
+              src="https://www.svgrepo.com/show/475656/google-color.svg"
+              alt="Google"
+              width={20}
+              height={20}
+            />
+            <span className="font-medium">Google</span>
+          </button>
+
+          {/* Terms */}
+          <p className="text-xs text-gray-500">
+            By clicking 'Log In' you agree to our website LinkifyClub{" "}
+            <a href="#" className="text-blue-600 underline">
+              Terms & Conditions
+            </a>
+            ,{" "}
+            <a href="#" className="text-blue-600 underline">
+              Privacy Notice
+            </a>{" "}
+            and{" "}
+            <a href="#" className="text-blue-600 underline">
+              Terms & Conditions
+            </a>
+            .
+          </p>
+        </div>
+      </div>
+    </div>
   );
 }

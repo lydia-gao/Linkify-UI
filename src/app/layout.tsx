@@ -1,9 +1,9 @@
-import { ReduxProvider } from "@/components/providers/ReduxProvider";
-import "@/styles/globals.css";
+import "../styles/globals.css";
+import type { Metadata } from "next";
 
-export const metadata = {
-  title: "Linkify - Link Management Platform",
-  description: "Manage and track your links with ease",
+export const metadata: Metadata = {
+  title: "Linkify",
+  description: "Linkify app",
 };
 
 export default function RootLayout({
@@ -13,9 +13,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body>
-        <ReduxProvider>{children}</ReduxProvider>
-      </body>
+      <body>{children}</body>
     </html>
   );
 }

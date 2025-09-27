@@ -1,152 +1,162 @@
 "use client";
 
 import { useState } from "react";
-import { useRouter } from "next/navigation";
-import { useDispatch, useSelector } from "react-redux";
-import { RootState, AppDispatch } from "@/store";
-import { registerUser } from "@/store/slices/authSlice";
-import { AuthLayout } from "@/components/layouts/AuthLayout";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Checkbox } from "@/components/ui/checkbox";
-import { Label } from "@/components/ui/label";
+import Image from "next/image";
 
 export default function RegisterPage() {
-  const router = useRouter();
-  const dispatch = useDispatch<AppDispatch>();
-  const { isLoading, error } = useSelector((state: RootState) => state.auth);
+  const [firstName, setFirstName] = useState("");
+  const [lastName, setLastName] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [agreeTerms, setAgreeTerms] = useState(false);
+  const [keepLoggedIn, setKeepLoggedIn] = useState(false);
 
-  const [formData, setFormData] = useState({
-    firstName: "",
-    lastName: "",
-    email: "",
-    password: "",
-    confirmPassword: "",
-    agreeToTerms: false,
-  });
-
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-
-    if (formData.password !== formData.confirmPassword) {
-      alert("Passwords do not match");
-      return;
-    }
-
-    try {
-      await dispatch(
-        registerUser({
-          firstName: formData.firstName,
-          lastName: formData.lastName,
-          email: formData.email,
-          password: formData.password,
-        })
-      ).unwrap();
-
-      router.push("/dashboard");
-    } catch (error) {
-      console.error("Registration failed:", error);
-    }
+    console.log("Register submit:", {
+      firstName,
+      lastName,
+      email,
+      password,
+      agreeTerms,
+      keepLoggedIn,
+    });
   };
 
   return (
-    <AuthLayout title="Register" subtitle="Already have an account?">
-      <form onSubmit={handleSubmit} className="space-y-4">
-        <div className="space-y-4">
-          <div className="grid grid-cols-2 gap-4">
-            <Input
-              type="text"
-              placeholder="First Name"
-              value={formData.firstName}
-              onChange={(e) =>
-                setFormData((prev) => ({ ...prev, firstName: e.target.value }))
-              }
-              required
-            />
-            <Input
-              type="text"
-              placeholder="Last Name"
-              value={formData.lastName}
-              onChange={(e) =>
-                setFormData((prev) => ({ ...prev, lastName: e.target.value }))
-              }
-              required
-            />
-          </div>
-          <Input
-            type="email"
-            placeholder="Email"
-            value={formData.email}
-            onChange={(e) =>
-              setFormData((prev) => ({ ...prev, email: e.target.value }))
-            }
-            required
-          />
-          <Input
-            type="password"
-            placeholder="Password"
-            value={formData.password}
-            onChange={(e) =>
-              setFormData((prev) => ({ ...prev, password: e.target.value }))
-            }
-            required
-          />
-          <Input
-            type="password"
-            placeholder="Confirm Password"
-            value={formData.confirmPassword}
-            onChange={(e) =>
-              setFormData((prev) => ({
-                ...prev,
-                confirmPassword: e.target.value,
-              }))
-            }
-            required
-          />
-
-          <div className="flex items-start gap-2 text-sm">
-            <Checkbox
-              id="agreeToTerms"
-              checked={formData.agreeToTerms}
-              onCheckedChange={(checked) =>
-                setFormData((prev) => ({ ...prev, agreeToTerms: !!checked }))
-              }
-            />
-            <Label htmlFor="agreeToTerms" className="text-sm">
-              I agree to the{" "}
-              <a href="#" className="text-blue-600 underline">
-                Terms & Conditions
-              </a>{" "}
-              and{" "}
-              <a href="#" className="text-blue-600 underline">
-                Privacy Policy
-              </a>
-            </Label>
-          </div>
+    <div className="h-screen flex">
+      {/* Left side (background + logo) */}
+      <div className="hidden md:flex w-1/2 relative">
+        <Image
+          src="/white_link.png"
+          alt="background"
+          fill
+          className="object-cover"
+          priority
+        />
+        <div className="absolute top-12 left-1/2 -translate-x-1/2">
+          <Image src="/logo.png" alt="Linkify Logo" width={120} height={40} />
         </div>
+      </div>
 
-        {error && <div className="text-red-500 text-sm">{error}</div>}
+      {/* Right side (form area) */}
+      <div className="flex w-full md:w-1/2 justify-center items-center px-8">
+        <div className="max-w-md w-full space-y-6">
+          <h2 className="text-2xl font-bold">Register</h2>
 
-        <Button type="submit" className="w-full" disabled={isLoading}>
-          {isLoading ? "Creating Account..." : "CREATE ACCOUNT →"}
-        </Button>
-      </form>
+          {/* Google Sign-in */}
+          <div>
+            <p className="text-sm text-gray-600 mb-2">Sign up with</p>
+            <button className="btn-secondary">
+              <Image
+                src="https://www.svgrepo.com/show/475656/google-color.svg"
+                alt="Google"
+                width={20}
+                height={20}
+              />
+              <span className="font-medium">Google</span>
+            </button>
+          </div>
 
-      <p className="text-xs text-gray-500">
-        By clicking 'Create Account' you agree to our website LinkifyClub{" "}
-        <a href="#" className="text-blue-600 underline">
-          Terms & Conditions
-        </a>
-        ,{" "}
-        <a href="#" className="text-blue-600 underline">
-          Privacy Notice
-        </a>{" "}
-        and{" "}
-        <a href="#" className="text-blue-600 underline">
-          Terms & Conditions
-        </a>
-        .
-      </p>
-    </AuthLayout>
+          {/* Divider */}
+          <div className="flex items-center gap-2">
+            <div className="h-px flex-1 bg-gray-300"></div>
+            <span className="text-sm text-gray-500">OR</span>
+            <div className="h-px flex-1 bg-gray-300"></div>
+          </div>
+
+          {/* Name */}
+          <div>
+            <label className="block text-sm font-medium mb-1">Your Name</label>
+            <div className="flex gap-2">
+              <input
+                type="text"
+                placeholder="First Name"
+                value={firstName}
+                onChange={(e) => setFirstName(e.target.value)}
+                className="form-input w-1/2"
+              />
+              <input
+                type="text"
+                placeholder="Last Name"
+                value={lastName}
+                onChange={(e) => setLastName(e.target.value)}
+                className="form-input w-1/2"
+              />
+            </div>
+          </div>
+
+          {/* Login Details */}
+          <div>
+            <label className="block text-sm font-medium mb-1">
+              Login Details
+            </label>
+            <input
+              type="email"
+              placeholder="Email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              className="form-input mb-3"
+            />
+            <input
+              type="password"
+              placeholder="Password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              className="form-input"
+            />
+            <p className="text-xs text-gray-500 mt-1">
+              Minimum 8 characters with at least one uppercase, one lowercase,
+              one special character and a number
+            </p>
+          </div>
+
+          {/* Terms */}
+          <div className="space-y-2 text-sm">
+            <label className="flex items-start gap-2">
+              <input
+                type="checkbox"
+                checked={agreeTerms}
+                onChange={(e) => setAgreeTerms(e.target.checked)}
+                className="mt-1"
+              />
+              <span>
+                By clicking 'Register' you agree to our website LinkifyClub{" "}
+                <a href="#" className="text-blue-600 underline">
+                  Terms & Conditions
+                </a>
+                ,{" "}
+                <a href="#" className="text-blue-600 underline">
+                  Privacy Notice
+                </a>{" "}
+                and{" "}
+                <a href="#" className="text-blue-600 underline">
+                  Terms & Conditions
+                </a>
+                .
+              </span>
+            </label>
+
+            <label className="flex items-start gap-2">
+              <input
+                type="checkbox"
+                checked={keepLoggedIn}
+                onChange={(e) => setKeepLoggedIn(e.target.checked)}
+                className="mt-1"
+              />
+              <span>
+                Keep me logged in – applies to all log in options below. More
+                info
+              </span>
+            </label>
+          </div>
+
+          {/* Submit */}
+          <button onClick={handleSubmit} className="btn-primary">
+            REGISTER →
+          </button>
+        </div>
+      </div>
+    </div>
   );
 }
