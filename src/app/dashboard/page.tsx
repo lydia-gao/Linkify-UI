@@ -1,14 +1,44 @@
 "use client";
 
-import Layout from "@/components/Layout";
+import Layout from "../../components/Layout";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Calendar, ChevronDown } from "lucide-react";
+import { Button } from "@/components/ui/button";
 
 export default function DashboardPage() {
+  const stats = [
+    { label: "Links", value: 102 },
+    { label: "QR codes", value: 5 },
+    { label: "Barcodes", value: 6 },
+  ];
+
+  const recent = [
+    ["Link01", "#25426", "Jan 8, 2022", "Leo Gouse", "Asia, China", "2 clicks"],
+    [
+      "Link02",
+      "#25425",
+      "Jan 7, 2022",
+      "Jaxson Korsgaard",
+      "North America, Canada",
+      "2 clicks",
+    ],
+    ["Link03", "#25424", "Jan 6, 2022", "Talan Botosh", "Europe", "2 clicks"],
+    ["Link04", "#25423", "Jan 5, 2022", "Ryan Philips", "Asia", "2 clicks"],
+    [
+      "Link05",
+      "#25422",
+      "Jan 4, 2022",
+      "Emerson Baptista",
+      "South America",
+      "2 clicks",
+    ],
+    ["Link06", "#25421", "Jan 2, 2022", "Jaxson Calzoni", "Europe", "2 clicks"],
+  ];
+
   return (
     <Layout>
       {/* Page title */}
-      <section className="bg-linkify-background border-b px-6 py-4 flex items-center justify-between">
+      <section className="bg-[#f1f1ee] border-b border-gray-200 px-6 py-4 flex items-center justify-between">
         <div>
           <h2 className="font-bold text-gray-800">Dashboard</h2>
           <p className="text-sm text-gray-500">Home &gt; Dashboard</p>
@@ -20,89 +50,134 @@ export default function DashboardPage() {
         </div>
       </section>
 
-      <main className="p-6 space-y-6 bg-linkify-background">
+      <main className="p-6 space-y-6 bg-[#f1f1ee]">
         {/* Row 1: Stats */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          {["Links", "QR codes", "Barcodes"].map((label, i) => (
+          {stats.map((s) => (
             <Card
-              key={i}
-              className="rounded-lg border border-gray-200 shadow-sm bg-white"
+              key={s.label}
+              className="bg-[#fafaf8] border border-gray-200 rounded-md"
             >
               <CardHeader className="pb-2">
-                <CardTitle className="text-xs font-semibold uppercase tracking-wide text-gray-500">
-                  {label}
+                <CardTitle className="text-sm font-bold text-gray-800">
+                  {s.label}
                 </CardTitle>
               </CardHeader>
               <CardContent className="flex justify-between items-center px-4 pb-4">
-                <p className="text-3xl font-bold text-gray-900">102</p>
-                <span className="text-green-600 text-sm font-medium">
-                  ↑ 34.7%
-                </span>
+                <p className="text-2xl font-bold">{s.value}</p>
+                <span className="text-green-600 text-sm">↑ 34.7%</span>
               </CardContent>
+              <div className="px-4 pb-4 text-xs text-gray-400">
+                Compared to Jan 2022
+              </div>
             </Card>
           ))}
         </div>
 
         {/* Row 2: Graph + Best Links */}
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-          <Card className="lg:col-span-2">
-            <CardHeader>
-              <CardTitle>Activity Graph</CardTitle>
+          <Card className="lg:col-span-2 bg-[#fafaf8] border border-gray-200">
+            <CardHeader className="pb-2">
+              <CardTitle className="font-bold text-gray-800">
+                Activity Graph
+              </CardTitle>
             </CardHeader>
             <CardContent>
+              <div className="flex justify-between items-center mb-4">
+                <div className="flex gap-2 ml-auto">
+                  <Button variant="outline" size="sm" className="text-xs">
+                    WEEKLY
+                  </Button>
+                  <Button size="sm" className="text-xs bg-black text-white">
+                    MONTHLY
+                  </Button>
+                  <Button variant="outline" size="sm" className="text-xs">
+                    YEARLY
+                  </Button>
+                </div>
+              </div>
               <div className="h-72 flex items-center justify-center text-gray-400 text-sm">
                 [Graph Placeholder]
               </div>
             </CardContent>
           </Card>
 
-          <Card>
-            <CardHeader>
+          <Card className="bg-[#fafaf8] border border-gray-200">
+            <CardHeader className="pb-2">
               <CardTitle className="text-sm font-bold text-gray-800">
                 Best Links
               </CardTitle>
             </CardHeader>
             <CardContent>
               <ul className="text-sm mt-2 space-y-4">
-                <li className="flex justify-between">
-                  <span>Link01</span>
-                  <span className="font-bold">$126.50</span>
-                </li>
-                <li className="flex justify-between">
-                  <span>QRCode02</span>
-                  <span className="font-bold">$126.50</span>
-                </li>
+                {[
+                  {
+                    name: "Link01",
+                    amount: "$126.50",
+                    last: "01-08-2022 14:32",
+                  },
+                  {
+                    name: "QRCode02",
+                    amount: "$126.50",
+                    last: "01-07-2022 16:10",
+                  },
+                  {
+                    name: "Barcode03",
+                    amount: "$126.50",
+                    last: "01-06-2022 11:25",
+                  },
+                ].map((b) => (
+                  <li key={b.name}>
+                    <div className="flex justify-between">
+                      <span>{b.name}</span>
+                      <span className="font-bold">{b.amount}</span>
+                    </div>
+                    <p className="text-xs text-gray-400">
+                      last click: {b.last}
+                    </p>
+                  </li>
+                ))}
               </ul>
+              <Button className="mt-4 w-full text-xs bg-black text-white">
+                REPORT
+              </Button>
             </CardContent>
           </Card>
         </div>
 
         {/* Row 3: Recent Clicks */}
-        <Card>
-          <CardHeader>
-            <CardTitle>Recent Clicks</CardTitle>
+        <Card className="bg-[#fafaf8] border border-gray-200">
+          <CardHeader className="pb-2">
+            <CardTitle className="font-bold text-gray-800">
+              Recent Clicks
+            </CardTitle>
           </CardHeader>
           <CardContent>
-            <table className="w-full border-collapse text-xs">
-              <thead className="text-sm bg-gray-50">
-                <tr>
-                  <th className="py-2">Link</th>
-                  <th>Click ID</th>
-                  <th>Date</th>
-                  <th>Client</th>
-                  <th>Country</th>
-                  <th>Amount</th>
+            <table className="w-full border-collapse">
+              <thead className="text-sm">
+                <tr className="border-b border-gray-200 bg-gray-50">
+                  <th className="py-3 px-2 font-medium text-center">Link</th>
+                  <th className="py-3 px-2 font-medium text-center">
+                    Click ID
+                  </th>
+                  <th className="py-3 px-2 font-medium text-center">Date</th>
+                  <th className="py-3 px-2 font-medium text-center">
+                    Client Name
+                  </th>
+                  <th className="py-3 px-2 font-medium text-center">Country</th>
+                  <th className="py-3 px-2 font-medium text-center">Amount</th>
                 </tr>
               </thead>
-              <tbody className="divide-y">
-                <tr>
-                  <td className="text-center py-2">Link01</td>
-                  <td className="text-center">#25426</td>
-                  <td className="text-center">Jan 8, 2022</td>
-                  <td className="text-center">Leo Gouse</td>
-                  <td className="text-center">Asia, China</td>
-                  <td className="text-center">2 clicks</td>
-                </tr>
+              <tbody className="text-xs">
+                {recent.map((r, idx) => (
+                  <tr key={r[1]} className={idx % 2 === 1 ? "bg-gray-50" : ""}>
+                    {r.map((cell, i) => (
+                      <td key={i} className="py-3 px-2 text-center">
+                        {cell}
+                      </td>
+                    ))}
+                  </tr>
+                ))}
               </tbody>
             </table>
           </CardContent>
