@@ -2,106 +2,115 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { useDispatch } from "react-redux";
-import { setUser } from "@/store/slices/authSlice";
-import AuthLayout from "@/components/layouts/AuthLayout";
+import { useDispatch, useSelector } from "react-redux";
+import { RootState, AppDispatch } from "@/store";
+import { loginUser, googleAuth } from "@/store/slices/authSlice";
+import { AuthLayout } from "@/components/layouts/AuthLayout";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Checkbox } from "@/components/ui/checkbox";
+import { Label } from "@/components/ui/label";
 
 export default function LoginPage() {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [keepLoggedIn, setKeepLoggedIn] = useState(true);
   const router = useRouter();
-  const dispatch = useDispatch();
+  const dispatch = useDispatch<AppDispatch>();
+  const { isLoading, error } = useSelector((state: RootState) => state.auth);
+
+  const [formData, setFormData] = useState({
+    email: "",
+    password: "",
+    keepLoggedIn: true,
+  });
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    // Simple validation
-    if (!email || !password) {
-      alert("Please fill in all fields");
-      return;
+    try {
+      await dispatch(
+        loginUser({
+          email: formData.email,
+          password: formData.password,
+        })
+      ).unwrap();
+
+      router.push("/dashboard");
+    } catch (error) {
+      console.error("Login failed:", error);
     }
-
-    // Mock login - replace with actual API call
-    const user = {
-      id: "1",
-      email: email,
-      name: "John Doe",
-    };
-
-    dispatch(setUser(user));
-    router.push("/dashboard");
   };
 
-  const handleGoogleLogin = () => {
-    // Mock Google login
-    const user = {
-      id: "1",
-      email: "user@gmail.com",
-      name: "Google User",
-    };
-
-    dispatch(setUser(user));
-    router.push("/dashboard");
+  const handleGoogleLogin = async () => {
+    try {
+      await dispatch(googleAuth()).unwrap();
+      router.push("/dashboard");
+    } catch (error) {
+      console.error("Google login failed:", error);
+    }
   };
 
   return (
     <AuthLayout title="Login" subtitle="Forgot your password?">
-      {/* Login form */}
-      <div className="space-y-4">
-        <input
-          type="email"
-          placeholder="Email"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-          className="w-full border rounded-md px-3 py-2 focus:ring-2 focus:ring-black focus:outline-none"
-        />
-        <input
-          type="password"
-          placeholder="Password"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-          className="w-full border rounded-md px-3 py-2 focus:ring-2 focus:ring-black focus:outline-none"
-        />
-
-        {/* Keep me logged in */}
-        <label className="flex items-start gap-2 text-sm">
-          <input
-            type="checkbox"
-            className="mt-1"
-            checked={keepLoggedIn}
-            onChange={(e) => setKeepLoggedIn(e.target.checked)}
+      <form onSubmit={handleSubmit} className="space-y-4">
+        <div className="space-y-4">
+          <Input
+            type="email"
+            placeholder="Email"
+            value={formData.email}
+            onChange={(e) =>
+              setFormData((prev) => ({ ...prev, email: e.target.value }))
+            }
+            className="w-full"
+            required
           />
-          <span>
-            Keep me logged in - applies to all log in options below.
-            <br />
-            More info
-          </span>
-        </label>
-      </div>
+          <Input
+            type="password"
+            placeholder="Password"
+            value={formData.password}
+            onChange={(e) =>
+              setFormData((prev) => ({ ...prev, password: e.target.value }))
+            }
+            className="w-full"
+            required
+          />
 
-      {/* Email Login button */}
-      <button
-        onClick={handleSubmit}
-        className="w-full bg-black text-white py-2 rounded-md font-medium flex items-center justify-center gap-2 hover:bg-gray-800"
-      >
-        EMAIL LOGIN →
-      </button>
+          <div className="flex items-start gap-2 text-sm">
+            <Checkbox
+              id="keepLoggedIn"
+              checked={formData.keepLoggedIn}
+              onCheckedChange={(checked) =>
+                setFormData((prev) => ({ ...prev, keepLoggedIn: !!checked }))
+              }
+            />
+            <Label htmlFor="keepLoggedIn" className="text-sm">
+              Keep me logged in - applies to all log in options below.
+              <br />
+              More info
+            </Label>
+          </div>
+        </div>
 
-      {/* Google Login button */}
-      <button
-        onClick={handleGoogleLogin}
-        className="w-full flex items-center justify-center gap-2 border rounded-md py-2 hover:bg-gray-50"
-      >
-        <img
-          src="https://www.svgrepo.com/show/475656/google-color.svg"
-          alt="Google"
-          className="w-5 h-5"
-        />
-        <span className="font-medium">Google</span>
-      </button>
+        {error && <div className="text-red-500 text-sm">{error}</div>}
 
-      {/* Terms */}
+        <Button type="submit" className="w-full" disabled={isLoading}>
+          {isLoading ? "Logging in..." : "EMAIL LOGIN →"}
+        </Button>
+
+        <Button
+          type="button"
+          variant="outline"
+          className="w-full flex items-center justify-center gap-2"
+          onClick={handleGoogleLogin}
+          disabled={isLoading}
+        >
+          <img
+            src="https://www.svgrepo.com/show/475656/google-color.svg"
+            alt="Google"
+            className="w-5 h-5"
+          />
+          <span className="font-medium">Google</span>
+        </Button>
+      </form>
+
       <p className="text-xs text-gray-500">
         By clicking 'Log In' you agree to our website LinkifyClub{" "}
         <a href="#" className="text-blue-600 underline">

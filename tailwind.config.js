@@ -52,6 +52,21 @@ module.exports = {
           DEFAULT: "hsl(var(--card))",
           foreground: "hsl(var(--card-foreground))",
         },
+        // Linkify brand colors
+        linkify: {
+          background: "#f1f1ee",
+          primary: "#000000",
+          secondary: "#6366f1", // indigo-600
+          accent: "#f3f4f6", // gray-100
+          text: {
+            primary: "#1f2937", // gray-800
+            secondary: "#6b7280", // gray-500
+            muted: "#9ca3af", // gray-400
+          },
+          success: "#10b981", // emerald-500
+          warning: "#f59e0b", // amber-500
+          error: "#ef4444", // red-500
+        },
       },
       borderRadius: {
         lg: "var(--radius)",

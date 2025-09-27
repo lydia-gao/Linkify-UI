@@ -2,174 +2,183 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import DashboardLayout from "@/components/layouts/DashboardLayout";
-import { CheckCircle } from "lucide-react";
+import { useDispatch, useSelector } from "react-redux";
+import { RootState, AppDispatch } from "@/store";
+import { createLink } from "@/store/slices/linksSlice";
+import { DashboardLayout } from "@/components/layouts/DashboardLayout";
+import { FormField } from "@/components/ui/FormField";
+import { TagInput } from "@/components/ui/TagInput";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
-export default function CreateLinkPage() {
+export default function NewLinkPage() {
   const router = useRouter();
+  const dispatch = useDispatch<AppDispatch>();
+  const { isLoading, error } = useSelector((state: RootState) => state.links);
+
   const [formData, setFormData] = useState({
-    url: "",
-    linkName: "",
+    title: "",
+    originalUrl: "",
     description: "",
-    category: "",
-    ownerName: "",
-    expirationDays: "",
+    category: "links",
     alias: "",
-    tags: ["e-commerce", "Shoes", "sales", "Industrial"],
+    expiration: "",
+    tags: [] as string[],
   });
 
-  const handleInputChange = (field: string, value: string) => {
-    setFormData((prev) => ({ ...prev, [field]: value }));
-  };
-
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    // Mock create link
-    router.push("/links");
+
+    try {
+      await dispatch(createLink(formData)).unwrap();
+      router.push("/links");
+    } catch (error) {
+      console.error("Failed to create link:", error);
+    }
   };
 
-  const handleCancel = () => {
-    router.push("/links");
-  };
+  const categories = [
+    { value: "links", label: "Link" },
+    { value: "qr-codes", label: "QR Code" },
+    { value: "barcodes", label: "Barcode" },
+  ];
 
   return (
     <DashboardLayout
       pageTitle="Create New Link"
-      breadcrumb="Home > All Links > Create New"
+      breadcrumb="Home > Links > New"
     >
-      <div className="bg-white shadow rounded-md p-6 grid grid-cols-1 lg:grid-cols-3 gap-6 relative">
-        {/* Left form */}
-        <div className="lg:col-span-2 space-y-6 text-sm">
-          <div>
-            <label className="block font-bold text-gray-700">URL</label>
-            <input
-              type="url"
-              placeholder="https://example.com/your-link"
-              value={formData.url}
-              onChange={(e) => handleInputChange("url", e.target.value)}
-              className="mt-1 w-full border rounded-md px-3 py-2 text-sm"
-            />
-          </div>
-          <div>
-            <label className="block font-bold text-gray-700">Link Name</label>
-            <input
-              type="text"
-              placeholder="Enter link name"
-              value={formData.linkName}
-              onChange={(e) => handleInputChange("linkName", e.target.value)}
-              className="mt-1 w-full border rounded-md px-3 py-2 text-sm"
-            />
-          </div>
-          <div>
-            <label className="block font-bold text-gray-700">Description</label>
-            <textarea
-              placeholder="Enter description"
-              rows={3}
-              value={formData.description}
-              onChange={(e) => handleInputChange("description", e.target.value)}
-              className="mt-1 w-full border rounded-md px-3 py-2 text-sm"
-            />
-          </div>
-          <div>
-            <label className="block font-bold text-gray-700">Category</label>
-            <input
-              type="text"
-              placeholder="Category"
-              value={formData.category}
-              onChange={(e) => handleInputChange("category", e.target.value)}
-              className="mt-1 w-full border rounded-md px-3 py-2 text-sm"
-            />
-          </div>
-          <div className="grid grid-cols-2 gap-4">
-            <div>
-              <label className="block font-bold text-gray-700">
-                Owner Name
-              </label>
-              <input
-                type="text"
-                placeholder="Owner name"
-                value={formData.ownerName}
-                onChange={(e) => handleInputChange("ownerName", e.target.value)}
-                className="mt-1 w-full border rounded-md px-3 py-2 text-sm"
-              />
-            </div>
-            <div>
-              <label className="block font-bold text-gray-700">
-                Expiration (days)
-              </label>
-              <input
-                type="number"
-                placeholder="0"
-                value={formData.expirationDays}
-                onChange={(e) =>
-                  handleInputChange("expirationDays", e.target.value)
-                }
-                className="mt-1 w-full border rounded-md px-3 py-2 text-sm"
-              />
-            </div>
-          </div>
-          <div>
-            <label className="block font-bold text-gray-700">Alias</label>
-            <input
-              type="text"
-              placeholder="Alias"
-              value={formData.alias}
-              onChange={(e) => handleInputChange("alias", e.target.value)}
-              className="mt-1 w-full border rounded-md px-3 py-2 text-sm"
-            />
-          </div>
-          <div>
-            <label className="block font-bold text-gray-700">Tags</label>
-            <div className="mt-1 w-full border rounded-md px-3 py-2 flex flex-wrap gap-2">
-              {formData.tags.map((tag, index) => (
-                <span
-                  key={index}
-                  className="bg-gray-800 text-white text-xs px-2 py-1 rounded-full"
+      <div className="max-w-2xl mx-auto">
+        <Card>
+          <CardHeader>
+            <CardTitle>Link Details</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <form onSubmit={handleSubmit} className="space-y-6">
+              {/* Basic Information */}
+              <div className="space-y-4">
+                <FormField
+                  label="Title"
+                  name="title"
+                  placeholder="Enter link title"
+                  required
+                  value={formData.title}
+                  onChange={(value) =>
+                    setFormData((prev) => ({ ...prev, title: value }))
+                  }
+                />
+
+                <FormField
+                  label="Original URL"
+                  name="originalUrl"
+                  type="url"
+                  placeholder="https://example.com"
+                  required
+                  value={formData.originalUrl}
+                  onChange={(value) =>
+                    setFormData((prev) => ({ ...prev, originalUrl: value }))
+                  }
+                />
+
+                <div className="space-y-2">
+                  <label className="block font-bold text-gray-700">
+                    Description
+                  </label>
+                  <textarea
+                    className="w-full border border-gray-300 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    rows={3}
+                    placeholder="Enter link description"
+                    value={formData.description}
+                    onChange={(e) =>
+                      setFormData((prev) => ({
+                        ...prev,
+                        description: e.target.value,
+                      }))
+                    }
+                  />
+                </div>
+              </div>
+
+              {/* Advanced Options */}
+              <div className="space-y-4">
+                <div className="space-y-2">
+                  <label className="block font-bold text-gray-700">
+                    Category
+                  </label>
+                  <select
+                    className="w-full border border-gray-300 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    value={formData.category}
+                    onChange={(e) =>
+                      setFormData((prev) => ({
+                        ...prev,
+                        category: e.target.value,
+                      }))
+                    }
+                  >
+                    {categories.map((category) => (
+                      <option key={category.value} value={category.value}>
+                        {category.label}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+
+                <FormField
+                  label="Custom Alias (Optional)"
+                  name="alias"
+                  placeholder="my-custom-link"
+                  value={formData.alias}
+                  onChange={(value) =>
+                    setFormData((prev) => ({ ...prev, alias: value }))
+                  }
+                />
+
+                <FormField
+                  label="Expiration Date (Optional)"
+                  name="expiration"
+                  type="date"
+                  value={formData.expiration}
+                  onChange={(value) =>
+                    setFormData((prev) => ({ ...prev, expiration: value }))
+                  }
+                />
+
+                <div className="space-y-2">
+                  <label className="block font-bold text-gray-700">Tags</label>
+                  <TagInput
+                    tags={formData.tags}
+                    onTagsChange={(tags) =>
+                      setFormData((prev) => ({ ...prev, tags }))
+                    }
+                    placeholder="Add tags to categorize your link"
+                    maxTags={5}
+                  />
+                </div>
+              </div>
+
+              {/* Error Display */}
+              {error && (
+                <div className="bg-red-50 border border-red-200 rounded-md p-4">
+                  <p className="text-red-600 text-sm">{error}</p>
+                </div>
+              )}
+
+              {/* Submit Buttons */}
+              <div className="flex justify-end gap-4 pt-6 border-t">
+                <Button
+                  type="button"
+                  variant="outline"
+                  onClick={() => router.back()}
                 >
-                  {tag}
-                </span>
-              ))}
-            </div>
-          </div>
-        </div>
-
-        {/* Right panel */}
-        <div className="space-y-6 text-sm">
-          <div className="w-full h-40 bg-gray-100 rounded-md flex items-center justify-center">
-            <span className="text-gray-500">[ Link Preview Image ]</span>
-          </div>
-          <div className="border-2 border-dashed border-gray-300 rounded-md p-6 text-center text-gray-500">
-            Drop your image here, or browse
-            <br />
-            <span className="text-xs">Jpeg, png are allowed</span>
-          </div>
-          <div className="space-y-2">
-            <div className="flex items-center justify-between bg-gray-50 px-3 py-2 rounded-md">
-              <span>Link-thumbnail.png</span>
-              <CheckCircle className="w-4 h-4 text-indigo-600" />
-            </div>
-            <div className="flex items-center justify-between bg-gray-50 px-3 py-2 rounded-md">
-              <span>Link-thumbnail.png</span>
-              <CheckCircle className="w-4 h-4 text-indigo-600" />
-            </div>
-          </div>
-        </div>
-
-        {/* Actions bottom */}
-        <div className="lg:col-span-3 flex justify-end gap-3 pt-6">
-          <button
-            onClick={handleSubmit}
-            className="px-4 py-2 bg-black text-white text-sm rounded-md"
-          >
-            CREATE
-          </button>
-          <button
-            onClick={handleCancel}
-            className="px-4 py-2 bg-gray-200 text-gray-800 text-sm rounded-md"
-          >
-            CANCEL
-          </button>
-        </div>
+                  Cancel
+                </Button>
+                <Button type="submit" disabled={isLoading}>
+                  {isLoading ? "Creating..." : "Create Link"}
+                </Button>
+              </div>
+            </form>
+          </CardContent>
+        </Card>
       </div>
     </DashboardLayout>
   );

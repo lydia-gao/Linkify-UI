@@ -2,171 +2,151 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { useDispatch } from "react-redux";
-import { setUser } from "@/store/slices/authSlice";
-import AuthLayout from "@/components/layouts/AuthLayout";
+import { useDispatch, useSelector } from "react-redux";
+import { RootState, AppDispatch } from "@/store";
+import { registerUser } from "@/store/slices/authSlice";
+import { AuthLayout } from "@/components/layouts/AuthLayout";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Checkbox } from "@/components/ui/checkbox";
+import { Label } from "@/components/ui/label";
 
 export default function RegisterPage() {
-  const [firstName, setFirstName] = useState("");
-  const [lastName, setLastName] = useState("");
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [agreeToTerms, setAgreeToTerms] = useState(false);
-  const [keepLoggedIn, setKeepLoggedIn] = useState(false);
   const router = useRouter();
-  const dispatch = useDispatch();
+  const dispatch = useDispatch<AppDispatch>();
+  const { isLoading, error } = useSelector((state: RootState) => state.auth);
+
+  const [formData, setFormData] = useState({
+    firstName: "",
+    lastName: "",
+    email: "",
+    password: "",
+    confirmPassword: "",
+    agreeToTerms: false,
+  });
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    // Simple validation
-    if (!firstName || !lastName || !email || !password) {
-      alert("Please fill in all fields");
+    if (formData.password !== formData.confirmPassword) {
+      alert("Passwords do not match");
       return;
     }
 
-    if (!agreeToTerms) {
-      alert("Please agree to the terms and conditions");
-      return;
+    try {
+      await dispatch(
+        registerUser({
+          firstName: formData.firstName,
+          lastName: formData.lastName,
+          email: formData.email,
+          password: formData.password,
+        })
+      ).unwrap();
+
+      router.push("/dashboard");
+    } catch (error) {
+      console.error("Registration failed:", error);
     }
-
-    // Mock registration - replace with actual API call
-    const user = {
-      id: "1",
-      email: email,
-      name: `${firstName} ${lastName}`,
-    };
-
-    dispatch(setUser(user));
-    router.push("/dashboard");
-  };
-
-  const handleGoogleSignup = () => {
-    // Mock Google signup
-    const user = {
-      id: "1",
-      email: "user@gmail.com",
-      name: "Google User",
-    };
-
-    dispatch(setUser(user));
-    router.push("/dashboard");
   };
 
   return (
-    <AuthLayout title="Register">
-      {/* Google Sign-in */}
-      <div>
-        <p className="text-sm text-gray-600 mb-2">Sign up with</p>
-        <button
-          onClick={handleGoogleSignup}
-          className="w-full flex items-center justify-center gap-2 border rounded-md py-2 hover:bg-gray-50"
-        >
-          <img
-            src="https://www.svgrepo.com/show/475656/google-color.svg"
-            alt="Google"
-            className="w-5 h-5"
+    <AuthLayout title="Register" subtitle="Already have an account?">
+      <form onSubmit={handleSubmit} className="space-y-4">
+        <div className="space-y-4">
+          <div className="grid grid-cols-2 gap-4">
+            <Input
+              type="text"
+              placeholder="First Name"
+              value={formData.firstName}
+              onChange={(e) =>
+                setFormData((prev) => ({ ...prev, firstName: e.target.value }))
+              }
+              required
+            />
+            <Input
+              type="text"
+              placeholder="Last Name"
+              value={formData.lastName}
+              onChange={(e) =>
+                setFormData((prev) => ({ ...prev, lastName: e.target.value }))
+              }
+              required
+            />
+          </div>
+          <Input
+            type="email"
+            placeholder="Email"
+            value={formData.email}
+            onChange={(e) =>
+              setFormData((prev) => ({ ...prev, email: e.target.value }))
+            }
+            required
           />
-          <span className="font-medium">Google</span>
-        </button>
-      </div>
+          <Input
+            type="password"
+            placeholder="Password"
+            value={formData.password}
+            onChange={(e) =>
+              setFormData((prev) => ({ ...prev, password: e.target.value }))
+            }
+            required
+          />
+          <Input
+            type="password"
+            placeholder="Confirm Password"
+            value={formData.confirmPassword}
+            onChange={(e) =>
+              setFormData((prev) => ({
+                ...prev,
+                confirmPassword: e.target.value,
+              }))
+            }
+            required
+          />
 
-      <div className="flex items-center gap-2">
-        <div className="h-px flex-1 bg-gray-300"></div>
-        <span className="text-sm text-gray-500">OR</span>
-        <div className="h-px flex-1 bg-gray-300"></div>
-      </div>
-
-      {/* Name */}
-      <div>
-        <label className="block text-sm font-medium mb-1">Your Name</label>
-        <div className="flex gap-2">
-          <input
-            type="text"
-            placeholder="First Name"
-            value={firstName}
-            onChange={(e) => setFirstName(e.target.value)}
-            className="w-1/2 border rounded-md px-3 py-2 focus:ring-2 focus:ring-black focus:outline-none"
-          />
-          <input
-            type="text"
-            placeholder="Last Name"
-            value={lastName}
-            onChange={(e) => setLastName(e.target.value)}
-            className="w-1/2 border rounded-md px-3 py-2 focus:ring-2 focus:ring-black focus:outline-none"
-          />
+          <div className="flex items-start gap-2 text-sm">
+            <Checkbox
+              id="agreeToTerms"
+              checked={formData.agreeToTerms}
+              onCheckedChange={(checked) =>
+                setFormData((prev) => ({ ...prev, agreeToTerms: !!checked }))
+              }
+            />
+            <Label htmlFor="agreeToTerms" className="text-sm">
+              I agree to the{" "}
+              <a href="#" className="text-blue-600 underline">
+                Terms & Conditions
+              </a>{" "}
+              and{" "}
+              <a href="#" className="text-blue-600 underline">
+                Privacy Policy
+              </a>
+            </Label>
+          </div>
         </div>
-      </div>
 
-      {/* Login Details */}
-      <div>
-        <label className="block text-sm font-medium mb-1">Login Details</label>
-        <input
-          type="email"
-          placeholder="Email"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-          className="w-full border rounded-md px-3 py-2 mb-3 focus:ring-2 focus:ring-black focus:outline-none"
-        />
-        <input
-          type="password"
-          placeholder="Password"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-          className="w-full border rounded-md px-3 py-2 focus:ring-2 focus:ring-black focus:outline-none"
-        />
-        <p className="text-xs text-gray-500 mt-1">
-          Minimum 8 characters with at least one uppercase, one lowercase, one
-          special character and a number
-        </p>
-      </div>
+        {error && <div className="text-red-500 text-sm">{error}</div>}
 
-      {/* Terms */}
-      <div className="space-y-2">
-        <label className="flex items-start gap-2 text-sm">
-          <input
-            type="checkbox"
-            className="mt-1"
-            checked={agreeToTerms}
-            onChange={(e) => setAgreeToTerms(e.target.checked)}
-          />
-          <span>
-            By clicking 'Log In' you agree to our website LinkifyClub{" "}
-            <a href="#" className="text-blue-600 underline">
-              Terms & Conditions
-            </a>
-            ,{" "}
-            <a href="#" className="text-blue-600 underline">
-              Privacy Notice
-            </a>{" "}
-            and{" "}
-            <a href="#" className="text-blue-600 underline">
-              Terms & Conditions
-            </a>
-            .
-          </span>
-        </label>
+        <Button type="submit" className="w-full" disabled={isLoading}>
+          {isLoading ? "Creating Account..." : "CREATE ACCOUNT →"}
+        </Button>
+      </form>
 
-        <label className="flex items-start gap-2 text-sm">
-          <input
-            type="checkbox"
-            className="mt-1"
-            checked={keepLoggedIn}
-            onChange={(e) => setKeepLoggedIn(e.target.checked)}
-          />
-          <span>
-            Keep me logged in - applies to all log in options below. More info
-          </span>
-        </label>
-      </div>
-
-      {/* Submit */}
-      <button
-        onClick={handleSubmit}
-        className="w-full bg-black text-white py-2 rounded-md font-medium flex items-center justify-center gap-2 hover:bg-gray-800"
-      >
-        REGISTER →
-      </button>
+      <p className="text-xs text-gray-500">
+        By clicking 'Create Account' you agree to our website LinkifyClub{" "}
+        <a href="#" className="text-blue-600 underline">
+          Terms & Conditions
+        </a>
+        ,{" "}
+        <a href="#" className="text-blue-600 underline">
+          Privacy Notice
+        </a>{" "}
+        and{" "}
+        <a href="#" className="text-blue-600 underline">
+          Terms & Conditions
+        </a>
+        .
+      </p>
     </AuthLayout>
   );
 }

@@ -1,88 +1,131 @@
 "use client";
 
-import DashboardLayout from "@/components/layouts/DashboardLayout";
-import StatsCard from "@/components/StatsCard";
+import { useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { RootState, AppDispatch } from "@/store";
+import { fetchStats } from "@/store/slices/linksSlice";
+import { DashboardLayout } from "@/components/layouts/DashboardLayout";
+import { StatCard } from "@/components/ui/StatCard";
+import { GraphCard } from "@/components/ui/GraphCard";
+import { DataTable } from "@/components/ui/Table";
+import { Button } from "@/components/ui/button";
+import { StatsData, BestLink, RecentClick } from "@/types";
 
-// Mock data for dashboard
-const mockStats = [
+// Mock data - replace with actual API calls
+const mockStats: StatsData = {
+  links: {
+    total: 102,
+    change: 34.7,
+    changeType: "positive",
+  },
+  qrCodes: {
+    total: 5,
+    change: 34.7,
+    changeType: "positive",
+  },
+  barcodes: {
+    total: 6,
+    change: 34.7,
+    changeType: "positive",
+  },
+};
+
+const mockBestLinks: BestLink[] = [
+  { id: "1", name: "Link01", amount: "$126.50", lastClick: "01-08-2022 14:32" },
   {
-    title: "Links",
-    value: 102,
-    change: "34.7%",
-    subtitle: "Compared to Jan 2022",
+    id: "2",
+    name: "QRCode02",
+    amount: "$126.50",
+    lastClick: "01-07-2022 16:10",
   },
   {
-    title: "QR codes",
-    value: 5,
-    change: "34.7%",
-    subtitle: "Compared to Jan 2022",
-  },
-  {
-    title: "Barcodes",
-    value: 6,
-    change: "34.7%",
-    subtitle: "Compared to Jan 2022",
+    id: "3",
+    name: "Barcode03",
+    amount: "$126.50",
+    lastClick: "01-06-2022 11:25",
   },
 ];
 
-const mockBestLinks = [
-  { name: "Link01", amount: "$126.50", lastClick: "01-08-2022 14:32" },
-  { name: "QRCode02", amount: "$126.50", lastClick: "01-07-2022 16:10" },
-  { name: "Barcode03", amount: "$126.50", lastClick: "01-06-2022 11:25" },
-];
-
-const mockRecentClicks = [
+const mockRecentClicks: RecentClick[] = [
   {
+    id: "1",
     link: "Link01",
-    clickid: "#25426",
+    clickId: "#25426",
     date: "Jan 8, 2022",
-    clientname: "Leo Gouse",
+    clientName: "Leo Gouse",
     country: "Asia, China",
     amount: "2 clicks",
   },
   {
+    id: "2",
     link: "Link02",
-    clickid: "#25425",
+    clickId: "#25425",
     date: "Jan 7, 2022",
-    clientname: "Jaxson Korsgaard",
+    clientName: "Jaxson Korsgaard",
     country: "North America, Canada",
     amount: "2 clicks",
   },
   {
+    id: "3",
     link: "Link03",
-    clickid: "#25424",
+    clickId: "#25424",
     date: "Jan 6, 2022",
-    clientname: "Talan Botosh",
+    clientName: "Talan Botosh",
     country: "Europe",
     amount: "2 clicks",
   },
   {
+    id: "4",
     link: "Link04",
-    clickid: "#25423",
+    clickId: "#25423",
     date: "Jan 5, 2022",
-    clientname: "Ryan Philips",
+    clientName: "Ryan Philips",
     country: "Asia",
     amount: "2 clicks",
   },
   {
+    id: "5",
     link: "Link05",
-    clickid: "#25422",
+    clickId: "#25422",
     date: "Jan 4, 2022",
-    clientname: "Emerson Baptista",
+    clientName: "Emerson Baptista",
     country: "South America",
     amount: "2 clicks",
   },
   {
+    id: "6",
     link: "Link06",
-    clickid: "#25421",
+    clickId: "#25421",
     date: "Jan 2, 2022",
-    clientname: "Jaxson Calzoni",
+    clientName: "Jaxson Calzoni",
     country: "Europe",
     amount: "2 clicks",
   },
 ];
 
 export default function DashboardPage() {
+  const dispatch = useDispatch<AppDispatch>();
+  const { isLoading, error } = useSelector((state: RootState) => state.links);
+
+  useEffect(() => {
+    // Fetch dashboard data on component mount
+    dispatch(fetchStats());
+  }, [dispatch]);
+
+  if (error) {
+    return (
+      <DashboardLayout
+        pageTitle="Dashboard"
+        breadcrumb="Home > Dashboard"
+        showDateRange={true}
+      >
+        <div className="text-center text-red-500">
+          Error loading dashboard: {error}
+        </div>
+      </DashboardLayout>
+    );
+  }
+
   return (
     <DashboardLayout
       pageTitle="Dashboard"
@@ -91,41 +134,38 @@ export default function DashboardPage() {
     >
       {/* Stats Cards */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-        {mockStats.map((stat, index) => (
-          <StatsCard
-            key={index}
-            title={stat.title}
-            value={stat.value}
-            change={stat.change}
-            subtitle={stat.subtitle}
-          />
-        ))}
+        <StatCard
+          title="Links"
+          value={mockStats.links.total}
+          change={`${mockStats.links.change}%`}
+          changeType={mockStats.links.changeType}
+          subtitle="Compared to Jan 2022"
+        />
+        <StatCard
+          title="QR codes"
+          value={mockStats.qrCodes.total}
+          change={`${mockStats.qrCodes.change}%`}
+          changeType={mockStats.qrCodes.changeType}
+          subtitle="Compared to Jan 2022"
+        />
+        <StatCard
+          title="Barcodes"
+          value={mockStats.barcodes.total}
+          change={`${mockStats.barcodes.change}%`}
+          changeType={mockStats.barcodes.changeType}
+          subtitle="Compared to Jan 2022"
+        />
       </div>
 
       {/* Graph + Best Links */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* Activity Graph */}
-        <div className="lg:col-span-2 bg-white shadow rounded-md p-4">
-          <p className="font-bold text-gray-800 border-b pb-2 mb-4">
-            Activity Graph
-          </p>
-          <div className="flex justify-between items-center mb-4">
-            <div className="flex gap-2 ml-auto">
-              <button className="px-3 py-1 text-xs border rounded-md">
-                WEEKLY
-              </button>
-              <button className="px-3 py-1 text-xs border rounded-md bg-black text-white">
-                MONTHLY
-              </button>
-              <button className="px-3 py-1 text-xs border rounded-md">
-                YEARLY
-              </button>
-            </div>
-          </div>
+        <GraphCard title="Activity Graph">
+          {/* You can add your chart component here */}
           <div className="h-72 flex items-center justify-center text-gray-400 text-sm">
-            [Graph Placeholder]
+            [Chart Component Placeholder]
           </div>
-        </div>
+        </GraphCard>
 
         {/* Best Links */}
         <div className="bg-white shadow rounded-md p-4">
@@ -133,8 +173,8 @@ export default function DashboardPage() {
             Best Links
           </p>
           <ul className="text-sm mt-2 space-y-4">
-            {mockBestLinks.map((link, index) => (
-              <li key={index}>
+            {mockBestLinks.map((link) => (
+              <li key={link.id}>
                 <div className="flex justify-between">
                   <span>{link.name}</span>
                   <span className="font-bold">{link.amount}</span>
@@ -145,40 +185,33 @@ export default function DashboardPage() {
               </li>
             ))}
           </ul>
-          <button className="mt-4 w-full text-xs bg-black text-white py-1 rounded-md">
+          <Button size="sm" className="mt-4 w-full text-xs">
             REPORT
-          </button>
+          </Button>
         </div>
       </div>
 
       {/* Recent Clicks Table */}
-      <div className="bg-white shadow rounded-md p-4">
-        <p className="font-bold text-gray-800 mb-4">Recent Clicks</p>
-        <table className="w-full border-collapse">
-          <thead className="text-sm">
-            <tr className="border-b bg-gray-50">
-              <th className="py-3 px-2 font-medium text-center">Link</th>
-              <th className="py-3 px-2 font-medium text-center">Click ID</th>
-              <th className="py-3 px-2 font-medium text-center">Date</th>
-              <th className="py-3 px-2 font-medium text-center">Client Name</th>
-              <th className="py-3 px-2 font-medium text-center">Country</th>
-              <th className="py-3 px-2 font-medium text-center">Amount</th>
-            </tr>
-          </thead>
-          <tbody className="divide-y text-xs">
-            {mockRecentClicks.map((click, index) => (
-              <tr key={index} className={index % 2 === 1 ? "bg-gray-50" : ""}>
-                <td className="py-3 px-2 text-center">{click.link}</td>
-                <td className="text-center">{click.clickid}</td>
-                <td className="text-center">{click.date}</td>
-                <td className="text-center">{click.clientname}</td>
-                <td className="text-center">{click.country}</td>
-                <td className="text-center">{click.amount}</td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
+      <DataTable
+        title="Recent Clicks"
+        headers={[
+          "Link",
+          "Click ID",
+          "Date",
+          "Client Name",
+          "Country",
+          "Amount",
+        ]}
+        data={mockRecentClicks}
+      />
+
+      {isLoading && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center">
+          <div className="bg-white p-4 rounded-md">
+            Loading dashboard data...
+          </div>
+        </div>
+      )}
     </DashboardLayout>
   );
 }

@@ -1,5 +1,5 @@
-import { ReduxProvider } from "../components/providers/ReduxProvider";
-import "../styles/globals.css";
+import { ReduxProvider } from "@/components/providers/ReduxProvider";
+import "@/styles/globals.css";
 
 export const metadata = {
   title: "Linkify - Link Management Platform",

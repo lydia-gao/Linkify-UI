@@ -7,11 +7,7 @@ interface AuthLayoutProps {
   subtitle?: string;
 }
 
-export default function AuthLayout({
-  children,
-  title,
-  subtitle,
-}: AuthLayoutProps) {
+export function AuthLayout({ children, title, subtitle }: AuthLayoutProps) {
   return (
     <div className="h-screen flex">
       {/* Left side - Background Image */}

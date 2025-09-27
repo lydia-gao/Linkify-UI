@@ -1,82 +1,92 @@
-export interface User {
-  id: string;
-  email: string;
-  firstName: string;
-  lastName: string;
-  avatar?: string;
-  createdAt: string;
-  updatedAt: string;
+// Re-export types from slices for convenience
+export type { User, AuthState } from "@/store/slices/authSlice";
+export type {
+  Link,
+  QRCode,
+  Barcode,
+  LinksState,
+} from "@/store/slices/linksSlice";
+export type { Notification, UIState } from "@/store/slices/uiSlice";
+
+// Additional common types
+export interface ApiResponse<T> {
+  data: T;
+  message?: string;
+  success: boolean;
 }
 
-export interface Link {
+export interface PaginatedResponse<T> {
+  data: T[];
+  currentPage: number;
+  totalPages: number;
+  totalCount: number;
+  hasNext: boolean;
+  hasPrev: boolean;
+}
+
+export interface StatsData {
+  links: {
+    total: number;
+    change: number;
+    changeType: "positive" | "negative";
+  };
+  qrCodes: {
+    total: number;
+    change: number;
+    changeType: "positive" | "negative";
+  };
+  barcodes: {
+    total: number;
+    change: number;
+    changeType: "positive" | "negative";
+  };
+}
+
+export interface BestLink {
   id: string;
   name: string;
-  description?: string;
-  url: string;
-  category: string;
-  ownerName: string;
-  status: "active" | "inactive";
-  expirationDays?: number;
-  tags: string[];
-  clicks: number;
-  createdAt: string;
-  updatedAt: string;
-}
-
-export interface LinkStats {
-  totalLinks: number;
-  totalClicks: number;
-  totalRevenue: number;
-  linksChange: number;
-  clicksChange: number;
-  revenueChange: number;
-}
-
-export interface ClickData {
-  date: string;
-  clicks: number;
-}
-
-export interface RevenueData {
-  source: string;
-  amount: number;
+  amount: string;
+  lastClick: string;
 }
 
 export interface RecentClick {
+  id: string;
+  link: string;
+  clickId: string;
+  date: string;
   clientName: string;
   country: string;
-  amount: number;
-  date: string;
+  amount: string;
 }
 
-export interface AuthState {
-  user: User | null;
-  isAuthenticated: boolean;
-  isLoading: boolean;
+export interface Category {
+  id: string;
+  name: string;
+  count: number;
+  type: "links" | "qr-codes" | "barcodes";
 }
 
-export interface LinksState {
-  links: Link[];
-  selectedLink: Link | null;
-  isLoading: boolean;
-  error: string | null;
+export interface FormFieldProps {
+  label: string;
+  name: string;
+  type?: string;
+  placeholder?: string;
+  required?: boolean;
+  error?: string;
+  value?: string;
+  onChange?: (value: string) => void;
 }
 
-export interface DashboardData {
-  stats: LinkStats;
-  clicksOverTime: ClickData[];
-  revenueDetails: RevenueData[];
-  recentClicks: RecentClick[];
+export interface TagInputProps {
+  tags: string[];
+  onTagsChange: (tags: string[]) => void;
+  placeholder?: string;
+  maxTags?: number;
 }
 
-export type LinkCategory =
-  | "All"
-  | "Active"
-  | "Inactive"
-  | "Google"
-  | "Social"
-  | "Email"
-  | "Direct"
-  | "Ad SEO"
-  | "Affiliate";
-
+export interface UploadBoxProps {
+  onFileSelect: (file: File) => void;
+  acceptedTypes?: string[];
+  maxSize?: number;
+  multiple?: boolean;
+}
