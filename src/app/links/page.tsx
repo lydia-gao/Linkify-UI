@@ -9,7 +9,7 @@ const mockLinks = Array.from({ length: 4 }).map((_, i) => ({
   shortUrl: "https://{your-domain}/(alias-or-code)",
   summary: "Summary\nGood link in Google.",
   clicks: 1269,
-  expiration: "2023-12-31",
+  expiration: "2025-12-31",
 }));
 
 export default function LinksPage() {
@@ -34,9 +34,11 @@ export default function LinksPage() {
               <CardContent className="p-4 text-sm">
                 <div className="flex justify-between gap-4">
                   <div>
-                    <h3 className="font-bold text-gray-800">{link.title}</h3>
-                    <p className="text-xs text-gray-600">{link.longUrl}</p>
-                    <p className="text-xs font-semibold text-gray-800">
+                    <h3 className="font-bold text-gray-800 mb-1.5">
+                      {link.title}
+                    </h3>
+                    <p className="text-xs text-gray-600 mb-1">{link.longUrl}</p>
+                    <p className="text-xs font-semibold text-gray-800 mb-2">
                       {link.shortUrl}
                     </p>
                     <p className="mt-2 text-xs text-gray-500 whitespace-pre-line">

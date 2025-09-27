@@ -2,7 +2,7 @@ export default function Footer() {
   return (
     <footer className="mt-auto bg-[#f1f1ee] text-gray-500 text-sm px-6 py-4 border-t border-gray-200">
       <div className="flex items-center justify-between">
-        <p>© 2023 - Linkify Dashboard</p>
+        <p>© 2025 - Linkify Dashboard</p>
         <div className="space-x-4">
           <a href="#" className="hover:underline">
             About
