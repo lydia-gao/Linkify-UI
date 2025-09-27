@@ -1,17 +1,28 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Image from "next/image";
+import { useRouter } from "next/navigation";
+import { useAppDispatch, useAppSelector } from "@/store/hooks";
+import { loginUser } from "@/store/slices/authSlice";
 
 export default function LoginPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [remember, setRemember] = useState(true);
+  const dispatch = useAppDispatch();
+  const router = useRouter();
+  const { loading, error, accessToken } = useAppSelector((s) => s.auth);
+
+  useEffect(() => {
+    if (accessToken) {
+      router.push("/dashboard");
+    }
+  }, [accessToken, router]);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    console.log("Login submit:", { email, password, remember });
-    // TODO: dispatch Redux action like loginUser({ email, password })
+    dispatch(loginUser({ username: email, password }));
   };
 
   return (
@@ -73,8 +84,11 @@ export default function LoginPage() {
               </span>
             </label>
 
-            <button type="submit" className="btn-primary">
-              EMAIL LOGIN →
+            {error && (
+              <p className="text-sm text-red-600">{String(error)}</p>
+            )}
+            <button type="submit" className="btn-primary" disabled={loading}>
+              {loading ? "LOGGING IN..." : "EMAIL LOGIN →"}
             </button>
           </form>
 
@@ -91,7 +105,7 @@ export default function LoginPage() {
 
           {/* Terms */}
           <p className="text-xs text-gray-500">
-            By clicking 'Log In' you agree to our website LinkifyClub{" "}
+            By clicking &#39;Log In&#39; you agree to our website LinkifyClub{" "}
             <a href="#" className="text-blue-600 underline">
               Terms & Conditions
             </a>

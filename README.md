@@ -45,6 +45,14 @@ src/
 
 ## Getting Started
 
+### Configure API Base URL
+
+Copy `.env.local.example` to `.env.local` and set your API server URL (defaults to localhost):
+
+```
+NEXT_PUBLIC_API_BASE_URL=http://localhost:8000
+```
+
 1. **Install dependencies**:
 
    ```bash
@@ -88,16 +96,15 @@ The application currently uses mock data for demonstration:
 - Dashboard analytics with realistic metrics
 - Recent clicks and revenue data
 
-## Next Steps
+## API & Auth Integration
 
-This is a static UI implementation. To make it fully functional:
+- Axios client is configured at `src/lib/api/axios.ts` and reads `NEXT_PUBLIC_API_BASE_URL`.
+- Redux Toolkit auth slice lives in `src/store/slices/authSlice.ts` with two thunks:
+   - `registerUser` → POST `/auth/` JSON body: `{ email, username, hashed_password }`
+   - `loginUser` → POST `/auth/token` form data: `username`, `password`; stores `access_token` in localStorage.
+- Provider is wired in `src/app/layout.tsx` via `src/store/Providers.tsx`.
 
-1. **Backend Integration**: Connect to a real API using Axios
-2. **Authentication**: Implement real login/logout with JWT tokens
-3. **Database**: Add database integration for persistent data
-4. **Real-time Updates**: Add WebSocket support for live updates
-5. **Testing**: Add unit and integration tests
-6. **Deployment**: Set up CI/CD and deploy to production
+You can test flows using the Login and Register pages now. Successful login redirects to `/dashboard`.
 
 ## Development
 

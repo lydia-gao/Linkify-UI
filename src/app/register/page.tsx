@@ -2,6 +2,9 @@
 
 import { useState } from "react";
 import Image from "next/image";
+import { useRouter } from "next/navigation";
+import { useAppDispatch, useAppSelector } from "@/store/hooks";
+import { registerUser } from "@/store/slices/authSlice";
 
 export default function RegisterPage() {
   const [firstName, setFirstName] = useState("");
@@ -10,17 +13,20 @@ export default function RegisterPage() {
   const [password, setPassword] = useState("");
   const [agreeTerms, setAgreeTerms] = useState(false);
   const [keepLoggedIn, setKeepLoggedIn] = useState(false);
+  const dispatch = useAppDispatch();
+  const router = useRouter();
+  const { loading, error } = useAppSelector((s) => s.auth);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    console.log("Register submit:", {
-      firstName,
-      lastName,
-      email,
-      password,
-      agreeTerms,
-      keepLoggedIn,
-    });
+    if (!agreeTerms) return; // basic guard
+    const username = `${firstName}${lastName}`.trim() || email.split("@")[0];
+    const res = await dispatch(
+      registerUser({ email, username, password })
+    );
+    if (registerUser.fulfilled.match(res)) {
+      router.push("/login");
+    }
   };
 
   return (
@@ -121,7 +127,7 @@ export default function RegisterPage() {
                 className="mt-1"
               />
               <span>
-                By clicking 'Register' you agree to our website LinkifyClub{" "}
+                By clicking &#39;Register&#39; you agree to our website LinkifyClub{" "}
                 <a href="#" className="text-blue-600 underline">
                   Terms & Conditions
                 </a>
@@ -152,8 +158,9 @@ export default function RegisterPage() {
           </div>
 
           {/* Submit */}
-          <button onClick={handleSubmit} className="btn-primary">
-            REGISTER →
+          {error && <p className="text-sm text-red-600">{String(error)}</p>}
+          <button onClick={handleSubmit} className="btn-primary" disabled={loading || !agreeTerms}>
+            {loading ? "REGISTERING..." : "REGISTER →"}
           </button>
         </div>
       </div>
