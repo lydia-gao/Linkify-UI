@@ -2,48 +2,29 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import Link from "next/link";
-import { Sidebar } from "../../../components/Sidebar";
-import { Navbar } from "../../../components/Navbar";
-import { FormInput } from "../../../components/FormInput";
-import { Button } from "../../../components/ui/button";
-import {
-  Card,
-  CardContent,
-  CardHeader,
-  CardTitle,
-} from "../../../components/ui/card";
-import { Badge } from "../../../components/ui/badge";
-import { Upload, X } from "lucide-react";
-
-const categoryOptions = [
-  { value: "Google", label: "Google" },
-  { value: "Social", label: "Social" },
-  { value: "Email", label: "Email" },
-  { value: "Direct", label: "Direct" },
-  { value: "Ad SEO", label: "Ad SEO" },
-  { value: "Affiliate", label: "Affiliate" },
-];
+import DashboardLayout from "@/components/layouts/DashboardLayout";
+import { CheckCircle } from "lucide-react";
 
 export default function CreateLinkPage() {
   const router = useRouter();
   const [formData, setFormData] = useState({
+    url: "",
     linkName: "",
     description: "",
-    url: "",
     category: "",
     ownerName: "",
-    status: true,
     expirationDays: "",
-    tags: [] as string[],
+    alias: "",
+    tags: ["e-commerce", "Shoes", "sales", "Industrial"],
   });
 
-  const handleInputChange = (field: string, value: string | boolean) => {
+  const handleInputChange = (field: string, value: string) => {
     setFormData((prev) => ({ ...prev, [field]: value }));
   };
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
+    // Mock create link
     router.push("/links");
   };
 
@@ -52,278 +33,144 @@ export default function CreateLinkPage() {
   };
 
   return (
-    <div className="flex min-h-screen bg-gray-50">
-      <Sidebar />
-      <div className="flex-1 flex flex-col overflow-hidden">
-        <Navbar />
-        <main className="flex-1 overflow-x-hidden overflow-y-auto bg-gray-50">
-          <div className="mx-auto px-4 py-8 max-w-6xl">
-            <div className="mb-6">
-              <h1 className="text-2xl font-bold text-gray-900 mb-1">
-                Link Details
-              </h1>
-              <p className="text-gray-500">
-                Create a new link or edit existing one.
-              </p>
+    <DashboardLayout
+      pageTitle="Create New Link"
+      breadcrumb="Home > All Links > Create New"
+    >
+      <div className="bg-white shadow rounded-md p-6 grid grid-cols-1 lg:grid-cols-3 gap-6 relative">
+        {/* Left form */}
+        <div className="lg:col-span-2 space-y-6 text-sm">
+          <div>
+            <label className="block font-bold text-gray-700">URL</label>
+            <input
+              type="url"
+              placeholder="https://example.com/your-link"
+              value={formData.url}
+              onChange={(e) => handleInputChange("url", e.target.value)}
+              className="mt-1 w-full border rounded-md px-3 py-2 text-sm"
+            />
+          </div>
+          <div>
+            <label className="block font-bold text-gray-700">Link Name</label>
+            <input
+              type="text"
+              placeholder="Enter link name"
+              value={formData.linkName}
+              onChange={(e) => handleInputChange("linkName", e.target.value)}
+              className="mt-1 w-full border rounded-md px-3 py-2 text-sm"
+            />
+          </div>
+          <div>
+            <label className="block font-bold text-gray-700">Description</label>
+            <textarea
+              placeholder="Enter description"
+              rows={3}
+              value={formData.description}
+              onChange={(e) => handleInputChange("description", e.target.value)}
+              className="mt-1 w-full border rounded-md px-3 py-2 text-sm"
+            />
+          </div>
+          <div>
+            <label className="block font-bold text-gray-700">Category</label>
+            <input
+              type="text"
+              placeholder="Category"
+              value={formData.category}
+              onChange={(e) => handleInputChange("category", e.target.value)}
+              className="mt-1 w-full border rounded-md px-3 py-2 text-sm"
+            />
+          </div>
+          <div className="grid grid-cols-2 gap-4">
+            <div>
+              <label className="block font-bold text-gray-700">
+                Owner Name
+              </label>
+              <input
+                type="text"
+                placeholder="Owner name"
+                value={formData.ownerName}
+                onChange={(e) => handleInputChange("ownerName", e.target.value)}
+                className="mt-1 w-full border rounded-md px-3 py-2 text-sm"
+              />
             </div>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-              {/* 左侧表单区 */}
-              <div className="md:col-span-2">
-                <Card className="shadow border bg-white">
-                  <CardHeader className="pb-2">
-                    <CardTitle className="text-base font-semibold text-gray-900">
-                      Link Information
-                    </CardTitle>
-                  </CardHeader>
-                  <CardContent>
-                    <form onSubmit={handleSubmit} className="space-y-5">
-                      <div className="grid grid-cols-1 gap-5">
-                        <div>
-                          <label
-                            htmlFor="linkName"
-                            className="block text-sm font-medium text-gray-700 mb-1"
-                          >
-                            Link Name *
-                          </label>
-                          <input
-                            id="linkName"
-                            type="text"
-                            placeholder="Enter link name"
-                            value={formData.linkName}
-                            onChange={(e) =>
-                              handleInputChange("linkName", e.target.value)
-                            }
-                            required
-                            className="w-full px-3 py-2 border border-gray-300 rounded focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                          />
-                        </div>
-                        <div>
-                          <label
-                            htmlFor="description"
-                            className="block text-sm font-medium text-gray-700 mb-1"
-                          >
-                            Description
-                          </label>
-                          <textarea
-                            id="description"
-                            placeholder="Enter link description"
-                            value={formData.description}
-                            onChange={(e) =>
-                              handleInputChange("description", e.target.value)
-                            }
-                            rows={2}
-                            className="w-full px-3 py-2 border border-gray-300 rounded focus:ring-2 focus:ring-blue-500 focus:border-blue-500 resize-none"
-                          />
-                        </div>
-                        <div>
-                          <label
-                            htmlFor="url"
-                            className="block text-sm font-medium text-gray-700 mb-1"
-                          >
-                            URL *
-                          </label>
-                          <input
-                            id="url"
-                            type="url"
-                            placeholder="https://example.com"
-                            value={formData.url}
-                            onChange={(e) =>
-                              handleInputChange("url", e.target.value)
-                            }
-                            required
-                            className="w-full px-3 py-2 border border-gray-300 rounded focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                          />
-                        </div>
-                        <div className="grid grid-cols-2 gap-4">
-                          <div>
-                            <label
-                              htmlFor="category"
-                              className="block text-sm font-medium text-gray-700 mb-1"
-                            >
-                              Category *
-                            </label>
-                            <select
-                              id="category"
-                              value={formData.category}
-                              onChange={(e) =>
-                                handleInputChange("category", e.target.value)
-                              }
-                              required
-                              className="w-full px-3 py-2 border border-gray-300 rounded focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                            >
-                              <option value="">Select category</option>
-                              {categoryOptions.map((option) => (
-                                <option key={option.value} value={option.value}>
-                                  {option.label}
-                                </option>
-                              ))}
-                            </select>
-                          </div>
-                          <div>
-                            <label
-                              htmlFor="ownerName"
-                              className="block text-sm font-medium text-gray-700 mb-1"
-                            >
-                              Owner Name *
-                            </label>
-                            <input
-                              id="ownerName"
-                              type="text"
-                              placeholder="Enter owner name"
-                              value={formData.ownerName}
-                              onChange={(e) =>
-                                handleInputChange("ownerName", e.target.value)
-                              }
-                              required
-                              className="w-full px-3 py-2 border border-gray-300 rounded focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                            />
-                          </div>
-                        </div>
-                        <div className="grid grid-cols-2 gap-4">
-                          <div>
-                            <label className="block text-sm font-medium text-gray-700 mb-1">
-                              Status
-                            </label>
-                            <div className="flex items-center space-x-2">
-                              <input
-                                type="checkbox"
-                                id="status"
-                                checked={formData.status}
-                                onChange={(e) =>
-                                  handleInputChange("status", e.target.checked)
-                                }
-                                className="w-4 h-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
-                              />
-                              <label
-                                htmlFor="status"
-                                className="text-sm text-gray-700"
-                              >
-                                {formData.status ? "Active" : "Inactive"}
-                              </label>
-                            </div>
-                          </div>
-                          <div>
-                            <label
-                              htmlFor="expirationDays"
-                              className="block text-sm font-medium text-gray-700 mb-1"
-                            >
-                              Expiration (Days)
-                            </label>
-                            <input
-                              id="expirationDays"
-                              type="number"
-                              placeholder="365"
-                              value={formData.expirationDays}
-                              onChange={(e) =>
-                                handleInputChange(
-                                  "expirationDays",
-                                  e.target.value
-                                )
-                              }
-                              className="w-full px-3 py-2 border border-gray-300 rounded focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                            />
-                          </div>
-                        </div>
-                      </div>
-                    </form>
-                  </CardContent>
-                </Card>
-              </div>
-              {/* 右侧图片区 */}
-              <div className="flex flex-col gap-6">
-                <Card className="shadow border bg-white">
-                  <CardHeader className="pb-2">
-                    <CardTitle className="text-base font-semibold text-gray-900">
-                      Link Gallery
-                    </CardTitle>
-                    <p className="text-xs text-gray-500">
-                      Upload images for your link
-                    </p>
-                  </CardHeader>
-                  <CardContent>
-                    <div className="border-2 border-dashed border-gray-300 rounded-lg p-4 text-center hover:border-blue-400 hover:bg-blue-50 transition-colors cursor-pointer">
-                      <Upload className="mx-auto h-8 w-8 text-gray-400 mb-2" />
-                      <p className="text-xs text-gray-500 mb-1">
-                        Drag & drop your image here or click to upload
-                      </p>
-                      <Button
-                        variant="outline"
-                        size="sm"
-                        className="border-gray-300 hover:bg-gray-50"
-                      >
-                        Choose File
-                      </Button>
-                    </div>
-                    {/* 图片列表 */}
-                    <div className="mt-4">
-                      <p className="text-xs font-medium text-gray-700 mb-2">
-                        Existing Images:
-                      </p>
-                      <div className="grid grid-cols-2 gap-3">
-                        {[1, 2, 3, 4].map((i) => (
-                          <div key={i} className="relative group">
-                            <div className="aspect-square bg-gray-100 rounded-lg flex items-center justify-center overflow-hidden">
-                              <img
-                                src="/horizontal_link.png"
-                                alt="Link"
-                                className="w-16 h-16 object-contain opacity-80"
-                              />
-                            </div>
-                            <button className="absolute -top-2 -right-2 w-6 h-6 bg-red-500 text-white rounded-full text-xs opacity-0 group-hover:opacity-100 transition-opacity">
-                              ×
-                            </button>
-                          </div>
-                        ))}
-                      </div>
-                    </div>
-                  </CardContent>
-                </Card>
-              </div>
-            </div>
-            {/* 按钮区 */}
-            <div className="flex items-center justify-end gap-3 mt-8 pt-6 border-t border-gray-200">
-              <Button
-                type="button"
-                variant="outline"
-                onClick={handleCancel}
-                className="px-5 py-2 border-gray-300 hover:bg-gray-50"
-              >
-                Cancel
-              </Button>
-              <Button
-                type="button"
-                variant="outline"
-                className="px-5 py-2 border-red-300 text-red-600 hover:bg-red-50"
-              >
-                Delete
-              </Button>
-              <Button
-                type="submit"
-                onClick={handleSubmit}
-                className="px-5 py-2 bg-blue-600 hover:bg-blue-700 text-white"
-              >
-                Save
-              </Button>
+            <div>
+              <label className="block font-bold text-gray-700">
+                Expiration (days)
+              </label>
+              <input
+                type="number"
+                placeholder="0"
+                value={formData.expirationDays}
+                onChange={(e) =>
+                  handleInputChange("expirationDays", e.target.value)
+                }
+                className="mt-1 w-full border rounded-md px-3 py-2 text-sm"
+              />
             </div>
           </div>
-          <footer className="bg-white border-t px-4 py-4 mt-8">
-            <div className="flex items-center justify-between text-xs text-gray-500">
-              <div>© 2023 Linkify. All rights reserved.</div>
-              <div className="flex items-center gap-3">
-                <a href="#" className="hover:text-gray-700">
-                  Terms
-                </a>
-                <a href="#" className="hover:text-gray-700">
-                  Privacy
-                </a>
-                <a href="#" className="hover:text-gray-700">
-                  Support
-                </a>
-              </div>
+          <div>
+            <label className="block font-bold text-gray-700">Alias</label>
+            <input
+              type="text"
+              placeholder="Alias"
+              value={formData.alias}
+              onChange={(e) => handleInputChange("alias", e.target.value)}
+              className="mt-1 w-full border rounded-md px-3 py-2 text-sm"
+            />
+          </div>
+          <div>
+            <label className="block font-bold text-gray-700">Tags</label>
+            <div className="mt-1 w-full border rounded-md px-3 py-2 flex flex-wrap gap-2">
+              {formData.tags.map((tag, index) => (
+                <span
+                  key={index}
+                  className="bg-gray-800 text-white text-xs px-2 py-1 rounded-full"
+                >
+                  {tag}
+                </span>
+              ))}
             </div>
-          </footer>
-        </main>
+          </div>
+        </div>
+
+        {/* Right panel */}
+        <div className="space-y-6 text-sm">
+          <div className="w-full h-40 bg-gray-100 rounded-md flex items-center justify-center">
+            <span className="text-gray-500">[ Link Preview Image ]</span>
+          </div>
+          <div className="border-2 border-dashed border-gray-300 rounded-md p-6 text-center text-gray-500">
+            Drop your image here, or browse
+            <br />
+            <span className="text-xs">Jpeg, png are allowed</span>
+          </div>
+          <div className="space-y-2">
+            <div className="flex items-center justify-between bg-gray-50 px-3 py-2 rounded-md">
+              <span>Link-thumbnail.png</span>
+              <CheckCircle className="w-4 h-4 text-indigo-600" />
+            </div>
+            <div className="flex items-center justify-between bg-gray-50 px-3 py-2 rounded-md">
+              <span>Link-thumbnail.png</span>
+              <CheckCircle className="w-4 h-4 text-indigo-600" />
+            </div>
+          </div>
+        </div>
+
+        {/* Actions bottom */}
+        <div className="lg:col-span-3 flex justify-end gap-3 pt-6">
+          <button
+            onClick={handleSubmit}
+            className="px-4 py-2 bg-black text-white text-sm rounded-md"
+          >
+            CREATE
+          </button>
+          <button
+            onClick={handleCancel}
+            className="px-4 py-2 bg-gray-200 text-gray-800 text-sm rounded-md"
+          >
+            CANCEL
+          </button>
+        </div>
       </div>
-    </div>
+    </DashboardLayout>
   );
 }

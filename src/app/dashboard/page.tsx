@@ -1,339 +1,184 @@
 "use client";
 
-import { Sidebar } from "../../components/Sidebar";
-import { Navbar } from "../../components/Navbar";
-import {
-  Card,
-  CardContent,
-  CardHeader,
-  CardTitle,
-} from "../../components/ui/card";
-import { Badge } from "../../components/ui/badge";
-import { TrendingUp, TrendingDown } from "lucide-react";
+import DashboardLayout from "@/components/layouts/DashboardLayout";
+import StatsCard from "@/components/StatsCard";
 
 // Mock data for dashboard
-const mockStats = {
-  totalLinks: 120,
-  totalClicks: 5200,
-  totalRevenue: 1200,
-  linksChange: 10.5,
-  clicksChange: 15.2,
-  revenueChange: 8.7,
-};
-
-const mockClicksOverTime = [
-  { month: "Jan", clicks: 400 },
-  { month: "Feb", clicks: 600 },
-  { month: "Mar", clicks: 550 },
-  { month: "Apr", clicks: 700 },
-  { month: "May", clicks: 800 },
-  { month: "Jun", clicks: 750 },
-  { month: "Jul", clicks: 850 },
-  { month: "Aug", clicks: 900 },
-  { month: "Sep", clicks: 950 },
-  { month: "Oct", clicks: 1000 },
-  { month: "Nov", clicks: 1100 },
-  { month: "Dec", clicks: 1200 },
+const mockStats = [
+  {
+    title: "Links",
+    value: 102,
+    change: "34.7%",
+    subtitle: "Compared to Jan 2022",
+  },
+  {
+    title: "QR codes",
+    value: 5,
+    change: "34.7%",
+    subtitle: "Compared to Jan 2022",
+  },
+  {
+    title: "Barcodes",
+    value: 6,
+    change: "34.7%",
+    subtitle: "Compared to Jan 2022",
+  },
 ];
 
-const mockRevenueDetails = [
-  { source: "Ad SEO", amount: 450 },
-  { source: "Affiliate", amount: 320 },
-  { source: "Direct", amount: 280 },
-  { source: "Email", amount: 150 },
-  { source: "Social", amount: 0 },
+const mockBestLinks = [
+  { name: "Link01", amount: "$126.50", lastClick: "01-08-2022 14:32" },
+  { name: "QRCode02", amount: "$126.50", lastClick: "01-07-2022 16:10" },
+  { name: "Barcode03", amount: "$126.50", lastClick: "01-06-2022 11:25" },
 ];
 
 const mockRecentClicks = [
   {
-    clientName: "John Smith",
-    country: "USA",
-    amount: 25.5,
-    date: "2023-02-28",
+    link: "Link01",
+    clickid: "#25426",
+    date: "Jan 8, 2022",
+    clientname: "Leo Gouse",
+    country: "Asia, China",
+    amount: "2 clicks",
   },
   {
-    clientName: "Sarah Johnson",
-    country: "UK",
-    amount: 18.75,
-    date: "2023-02-28",
+    link: "Link02",
+    clickid: "#25425",
+    date: "Jan 7, 2022",
+    clientname: "Jaxson Korsgaard",
+    country: "North America, Canada",
+    amount: "2 clicks",
   },
   {
-    clientName: "Mike Chen",
-    country: "Canada",
-    amount: 32.0,
-    date: "2023-02-27",
+    link: "Link03",
+    clickid: "#25424",
+    date: "Jan 6, 2022",
+    clientname: "Talan Botosh",
+    country: "Europe",
+    amount: "2 clicks",
   },
   {
-    clientName: "Emma Wilson",
-    country: "Australia",
-    amount: 22.3,
-    date: "2023-02-27",
+    link: "Link04",
+    clickid: "#25423",
+    date: "Jan 5, 2022",
+    clientname: "Ryan Philips",
+    country: "Asia",
+    amount: "2 clicks",
   },
   {
-    clientName: "David Brown",
-    country: "Germany",
-    amount: 28.9,
-    date: "2023-02-26",
+    link: "Link05",
+    clickid: "#25422",
+    date: "Jan 4, 2022",
+    clientname: "Emerson Baptista",
+    country: "South America",
+    amount: "2 clicks",
+  },
+  {
+    link: "Link06",
+    clickid: "#25421",
+    date: "Jan 2, 2022",
+    clientname: "Jaxson Calzoni",
+    country: "Europe",
+    amount: "2 clicks",
   },
 ];
 
 export default function DashboardPage() {
-  const formatNumber = (num: number) => {
-    if (num >= 1000) {
-      return (num / 1000).toFixed(1) + "K";
-    }
-    return num.toString();
-  };
-
-  const formatCurrency = (amount: number) => {
-    return new Intl.NumberFormat("en-US", {
-      style: "currency",
-      currency: "USD",
-    }).format(amount);
-  };
-
-  const StatCard = ({
-    title,
-    value,
-    change,
-    isCurrency = false,
-  }: {
-    title: string;
-    value: number;
-    change: number;
-    isCurrency?: boolean;
-  }) => {
-    const isPositive = change >= 0;
-    const formattedValue = isCurrency
-      ? formatCurrency(value)
-      : formatNumber(value);
-
-    return (
-      <Card className="shadow-sm border-0 bg-white">
-        <CardContent className="p-6">
-          <div className="flex items-center justify-between">
-            <div>
-              <p className="text-sm font-medium text-gray-600 mb-1">{title}</p>
-              <p className="text-3xl font-bold text-gray-900 mb-2">
-                {formattedValue}
-              </p>
-              <div className="flex items-center space-x-1">
-                {isPositive ? (
-                  <TrendingUp className="h-4 w-4 text-green-500" />
-                ) : (
-                  <TrendingDown className="h-4 w-4 text-red-500" />
-                )}
-                <span
-                  className={`text-sm font-medium ${
-                    isPositive ? "text-green-600" : "text-red-600"
-                  }`}
-                >
-                  {isPositive ? "+" : ""}
-                  {change}%
-                </span>
-                <span className="text-xs text-gray-500 ml-1">
-                  vs last month
-                </span>
-              </div>
-            </div>
-          </div>
-        </CardContent>
-      </Card>
-    );
-  };
-
   return (
-    <div className="flex h-screen bg-gray-50">
-      <Sidebar />
-
-      <div className="flex-1 flex flex-col overflow-hidden">
-        <Navbar />
-
-        <main className="flex-1 overflow-x-hidden overflow-y-auto bg-gray-50">
-          <div className="container mx-auto px-6 py-8 max-w-7xl">
-            {/* Header */}
-            <div className="mb-8">
-              <h1 className="text-3xl font-bold text-gray-900 mb-2">
-                Dashboard
-              </h1>
-              <p className="text-gray-600">
-                Welcome back! Here's what's happening with your links.
-              </p>
-            </div>
-
-            {/* Stats Cards */}
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-              <StatCard
-                title="Total Links"
-                value={mockStats.totalLinks}
-                change={mockStats.linksChange}
-              />
-              <StatCard
-                title="Total Clicks"
-                value={mockStats.totalClicks}
-                change={mockStats.clicksChange}
-              />
-              <StatCard
-                title="Total Revenue"
-                value={mockStats.totalRevenue}
-                change={mockStats.revenueChange}
-                isCurrency
-              />
-            </div>
-
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
-              {/* Clicks Over Time Chart */}
-              <Card className="shadow-sm border-0 bg-white">
-                <CardHeader className="pb-4">
-                  <CardTitle className="text-lg font-semibold text-gray-900">
-                    Active Campaigns
-                  </CardTitle>
-                  <p className="text-sm text-gray-600">Clicks over time</p>
-                </CardHeader>
-                <CardContent>
-                  <div className="h-64 flex items-end justify-between space-x-1">
-                    {mockClicksOverTime.map((data, index) => {
-                      const maxClicks = Math.max(
-                        ...mockClicksOverTime.map((d) => d.clicks)
-                      );
-                      const height = (data.clicks / maxClicks) * 180;
-
-                      return (
-                        <div
-                          key={data.month}
-                          className="flex flex-col items-center space-y-2 flex-1"
-                        >
-                          <div
-                            className="w-full bg-blue-500 rounded-t max-w-6"
-                            style={{ height: `${height}px` }}
-                          />
-                          <span className="text-xs text-gray-600 font-medium">
-                            {data.month}
-                          </span>
-                        </div>
-                      );
-                    })}
-                  </div>
-                </CardContent>
-              </Card>
-
-              {/* Revenue Details */}
-              <Card className="shadow-sm border-0 bg-white">
-                <CardHeader className="pb-4">
-                  <CardTitle className="text-lg font-semibold text-gray-900">
-                    Revenue Sources
-                  </CardTitle>
-                  <p className="text-sm text-gray-600">
-                    Revenue breakdown by source
-                  </p>
-                </CardHeader>
-                <CardContent>
-                  <div className="space-y-4">
-                    {mockRevenueDetails.map((item, index) => {
-                      const colors = [
-                        "bg-blue-500",
-                        "bg-green-500",
-                        "bg-purple-500",
-                        "bg-orange-500",
-                        "bg-red-500",
-                      ];
-                      return (
-                        <div
-                          key={item.source}
-                          className="flex items-center justify-between py-2"
-                        >
-                          <div className="flex items-center space-x-3">
-                            <div
-                              className={`w-3 h-3 ${colors[index]} rounded-full`}
-                            />
-                            <span className="text-sm font-medium text-gray-900">
-                              {item.source}
-                            </span>
-                          </div>
-                          <span className="text-sm font-semibold text-gray-900">
-                            {formatCurrency(item.amount)}
-                          </span>
-                        </div>
-                      );
-                    })}
-                  </div>
-                </CardContent>
-              </Card>
-            </div>
-
-            {/* Recent Clicks Table */}
-            <Card className="shadow-sm border-0 bg-white">
-              <CardHeader className="pb-4">
-                <CardTitle className="text-lg font-semibold text-gray-900">
-                  Recent Clicks
-                </CardTitle>
-                <p className="text-sm text-gray-600">Latest click activity</p>
-              </CardHeader>
-              <CardContent>
-                <div className="overflow-x-auto">
-                  <table className="w-full">
-                    <thead>
-                      <tr className="border-b border-gray-200">
-                        <th className="text-left py-3 px-4 font-medium text-gray-900 text-sm">
-                          Client Name
-                        </th>
-                        <th className="text-left py-3 px-4 font-medium text-gray-900 text-sm">
-                          Country
-                        </th>
-                        <th className="text-left py-3 px-4 font-medium text-gray-900 text-sm">
-                          Amount
-                        </th>
-                        <th className="text-left py-3 px-4 font-medium text-gray-900 text-sm">
-                          Date
-                        </th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {mockRecentClicks.map((click, index) => (
-                        <tr
-                          key={index}
-                          className="border-b border-gray-100 hover:bg-gray-50 transition-colors"
-                        >
-                          <td className="py-4 px-4 text-sm font-medium text-gray-900">
-                            {click.clientName}
-                          </td>
-                          <td className="py-4 px-4 text-sm text-gray-600">
-                            {click.country}
-                          </td>
-                          <td className="py-4 px-4 text-sm font-semibold text-gray-900">
-                            {formatCurrency(click.amount)}
-                          </td>
-                          <td className="py-4 px-4 text-sm text-gray-500">
-                            {click.date}
-                          </td>
-                        </tr>
-                      ))}
-                    </tbody>
-                  </table>
-                </div>
-              </CardContent>
-            </Card>
-          </div>
-
-          {/* Footer */}
-          <footer className="bg-white border-t px-6 py-4">
-            <div className="flex items-center justify-between text-sm text-gray-500">
-              <div>© 2023 Linkify. All rights reserved.</div>
-              <div className="flex items-center space-x-4">
-                <a href="#" className="hover:text-gray-700">
-                  Terms
-                </a>
-                <a href="#" className="hover:text-gray-700">
-                  Privacy
-                </a>
-                <a href="#" className="hover:text-gray-700">
-                  Support
-                </a>
-              </div>
-            </div>
-          </footer>
-        </main>
+    <DashboardLayout
+      pageTitle="Dashboard"
+      breadcrumb="Home > Dashboard"
+      showDateRange={true}
+    >
+      {/* Stats Cards */}
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+        {mockStats.map((stat, index) => (
+          <StatsCard
+            key={index}
+            title={stat.title}
+            value={stat.value}
+            change={stat.change}
+            subtitle={stat.subtitle}
+          />
+        ))}
       </div>
-    </div>
+
+      {/* Graph + Best Links */}
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        {/* Activity Graph */}
+        <div className="lg:col-span-2 bg-white shadow rounded-md p-4">
+          <p className="font-bold text-gray-800 border-b pb-2 mb-4">
+            Activity Graph
+          </p>
+          <div className="flex justify-between items-center mb-4">
+            <div className="flex gap-2 ml-auto">
+              <button className="px-3 py-1 text-xs border rounded-md">
+                WEEKLY
+              </button>
+              <button className="px-3 py-1 text-xs border rounded-md bg-black text-white">
+                MONTHLY
+              </button>
+              <button className="px-3 py-1 text-xs border rounded-md">
+                YEARLY
+              </button>
+            </div>
+          </div>
+          <div className="h-72 flex items-center justify-center text-gray-400 text-sm">
+            [Graph Placeholder]
+          </div>
+        </div>
+
+        {/* Best Links */}
+        <div className="bg-white shadow rounded-md p-4">
+          <p className="text-sm font-bold text-gray-800 border-b pb-2 mb-4">
+            Best Links
+          </p>
+          <ul className="text-sm mt-2 space-y-4">
+            {mockBestLinks.map((link, index) => (
+              <li key={index}>
+                <div className="flex justify-between">
+                  <span>{link.name}</span>
+                  <span className="font-bold">{link.amount}</span>
+                </div>
+                <p className="text-xs text-gray-400">
+                  last click: {link.lastClick}
+                </p>
+              </li>
+            ))}
+          </ul>
+          <button className="mt-4 w-full text-xs bg-black text-white py-1 rounded-md">
+            REPORT
+          </button>
+        </div>
+      </div>
+
+      {/* Recent Clicks Table */}
+      <div className="bg-white shadow rounded-md p-4">
+        <p className="font-bold text-gray-800 mb-4">Recent Clicks</p>
+        <table className="w-full border-collapse">
+          <thead className="text-sm">
+            <tr className="border-b bg-gray-50">
+              <th className="py-3 px-2 font-medium text-center">Link</th>
+              <th className="py-3 px-2 font-medium text-center">Click ID</th>
+              <th className="py-3 px-2 font-medium text-center">Date</th>
+              <th className="py-3 px-2 font-medium text-center">Client Name</th>
+              <th className="py-3 px-2 font-medium text-center">Country</th>
+              <th className="py-3 px-2 font-medium text-center">Amount</th>
+            </tr>
+          </thead>
+          <tbody className="divide-y text-xs">
+            {mockRecentClicks.map((click, index) => (
+              <tr key={index} className={index % 2 === 1 ? "bg-gray-50" : ""}>
+                <td className="py-3 px-2 text-center">{click.link}</td>
+                <td className="text-center">{click.clickid}</td>
+                <td className="text-center">{click.date}</td>
+                <td className="text-center">{click.clientname}</td>
+                <td className="text-center">{click.country}</td>
+                <td className="text-center">{click.amount}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    </DashboardLayout>
   );
 }
