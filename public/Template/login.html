@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Login - Linkify</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+  </head>
+  <body class="h-screen flex">
+    <!-- Left side -->
+    <div class="hidden md:flex w-1/2 relative">
+      <!-- 背景图片 -->
+      <img
+        src="../white_link.png"
+        alt="background"
+        class="object-cover w-full h-full"
+      />
+      <!-- 居中靠上的 Logo -->
+      <div class="absolute top-12 left-1/2 transform -translate-x-1/2">
+        <img src="../logo.png" alt="Linkify Logo" class="h-10 w-auto" />
+      </div>
+    </div>
+
+    <!-- Right side -->
+    <div class="flex w-full md:w-1/2 justify-center items-center px-8">
+      <div class="max-w-md w-full space-y-6">
+        <!-- Title -->
+        <div class="flex justify-between items-center">
+          <h2 class="text-2xl font-bold">Login</h2>
+          <a href="#" class="text-sm text-blue-600 hover:underline">
+            Forgot your password?
+          </a>
+        </div>
+
+        <!-- Login form -->
+        <div class="space-y-4">
+          <input
+            type="email"
+            placeholder="Email"
+            class="w-full border rounded-md px-3 py-2 focus:ring-2 focus:ring-black focus:outline-none"
+          />
+          <input
+            type="password"
+            placeholder="Password"
+            class="w-full border rounded-md px-3 py-2 focus:ring-2 focus:ring-black focus:outline-none"
+          />
+
+          <!-- Keep me logged in -->
+          <label class="flex items-start gap-2 text-sm">
+            <input type="checkbox" class="mt-1" checked />
+            <span>
+              Keep me logged in - applies to all log in options below.<br />
+              More info
+            </span>
+          </label>
+        </div>
+
+        <!-- Email Login button -->
+        <button
+          class="w-full bg-black text-white py-2 rounded-md font-medium flex items-center justify-center gap-2 hover:bg-gray-800"
+        >
+          EMAIL LOGIN →
+        </button>
+
+        <!-- Google Login button -->
+        <button
+          class="w-full flex items-center justify-center gap-2 border rounded-md py-2 hover:bg-gray-50"
+        >
+          <img
+            src="https://www.svgrepo.com/show/475656/google-color.svg"
+            alt="Google"
+            class="w-5 h-5"
+          />
+          <span class="font-medium">Google</span>
+        </button>
+
+        <!-- Terms -->
+        <p class="text-xs text-gray-500">
+          By clicking 'Log In' you agree to our website LinkifyClub
+          <a href="#" class="text-blue-600 underline">Terms & Conditions</a>,
+          <a href="#" class="text-blue-600 underline">Privacy Notice</a> and
+          <a href="#" class="text-blue-600 underline">Terms & Conditions</a>.
+        </p>
+      </div>
+    </div>
+  </body>
+</html>

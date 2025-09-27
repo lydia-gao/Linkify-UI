@@ -34,9 +34,9 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="min-h-screen flex flex-col md:flex-row bg-gray-50">
+    <div className="h-screen flex bg-gray-50">
       {/* Left Side - Image */}
-      <div className="w-full md:w-1/2 relative bg-gray-100 overflow-hidden min-h-[50vh] md:min-h-screen">
+      <div className="w-1/2 relative bg-gray-100 overflow-hidden">
         {/* Background pattern */}
         <div
           className="absolute inset-0 opacity-10"
@@ -46,7 +46,7 @@ export default function LoginPage() {
         />
 
         {/* Content */}
-        <div className="relative z-10 flex flex-col justify-center items-center w-full px-8">
+        <div className="relative z-10 flex flex-col justify-center items-center h-full px-8">
           <h1 className="text-5xl font-bold mb-6 text-gray-900 tracking-tight">
             LINKIFY
           </h1>
@@ -71,7 +71,7 @@ export default function LoginPage() {
       </div>
 
       {/* Right Side - Form */}
-      <div className="w-full md:w-1/2 flex items-center justify-center p-6 bg-white min-h-[50vh] md:min-h-screen">
+      <div className="w-1/2 flex items-center justify-center p-6 bg-white">
         <div className="w-full max-w-md">
           <div className="mb-8">
             <h2 className="text-3xl font-bold text-gray-900 mb-2">Login</h2>
