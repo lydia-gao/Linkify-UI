@@ -17,15 +17,13 @@
       };
     </script>
   </head>
-  <body class="bg-gray-100 min-h-screen flex">
+  <body class="bg-[#f1f1ee] min-h-screen flex">
     <!-- Sidebar -->
     <aside class="w-56 bg-white border-r flex flex-col">
-      <!-- Logo 居中 -->
       <div class="p-6 flex justify-center">
         <img src="../logo.png" alt="Linkify Logo" class="h-8 w-auto" />
       </div>
 
-      <!-- Create New Button -->
       <div class="flex justify-center mb-6">
         <button
           class="w-44 px-4 py-2 bg-black text-white text-xs rounded-md hover:bg-gray-800"
@@ -34,7 +32,6 @@
         </button>
       </div>
 
-      <!-- Navigation -->
       <nav class="flex-1 px-3 space-y-2">
         <a
           href="#"
@@ -58,7 +55,6 @@
           Click List
         </a>
 
-        <!-- Categories 可展开菜单 -->
         <div class="w-44 mx-auto">
           <button
             onclick="toggleCategories()"
@@ -86,26 +82,36 @@
     </aside>
 
     <!-- Main -->
-    <div class="flex-1 flex flex-col">
+    <div class="flex-1 flex flex-col bg-[#f1f1ee]">
       <!-- Top bar -->
       <header
-        class="h-16 bg-white border-b flex items-center justify-between px-6"
+        class="h-16 bg-white border-b flex items-center justify-end px-6 gap-6"
       >
-        <h2 class="font-semibold text-gray-800">Dashboard</h2>
-        <div class="flex items-center gap-4">
-          <span class="text-sm text-gray-600">Feb 16,2022 - Feb 20,2022</span>
-          <button
-            class="px-3 py-1 border rounded-md text-sm text-gray-700 bg-white"
-          >
-            ADMIN ⌄
-          </button>
-        </div>
+        <i data-lucide="search" class="w-5 h-5 text-gray-600"></i>
+        <i data-lucide="bell" class="w-5 h-5 text-gray-600"></i>
+        <button
+          class="px-3 py-1 border rounded-md text-sm text-gray-700 bg-white"
+        >
+          ADMIN ⌄
+        </button>
       </header>
 
-      <!-- Content -->
-      <main class="p-6 space-y-6">
-        <!-- Stats cards -->
-        <div class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-6">
+      <!-- Page title area -->
+      <section class="bg-[#f1f1ee] border-b px-6 py-4 flex items-center justify-between">
+        <div>
+          <h2 class="font-bold text-gray-800">Dashboard</h2>
+          <p class="text-sm text-gray-500">Home > Dashboard</p>
+        </div>
+        <div class="flex items-center gap-2 text-sm text-gray-600">
+          <i data-lucide="calendar" class="w-4 h-4"></i>
+          Feb 16,2022 - Feb 20,2022
+          <i data-lucide="chevron-down" class="w-4 h-4"></i>
+        </div>
+      </section>
+
+      <main class="p-6 space-y-6 bg-[#f1f1ee]">
+        <!-- 第一行横向3个卡片 -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
           <div class="bg-white shadow rounded-md p-4">
             <p class="text-sm font-bold text-gray-800">Links</p>
             <div class="flex justify-between items-center">
@@ -130,52 +136,57 @@
             </div>
             <p class="text-xs text-gray-400">Compared to Jan 2022</p>
           </div>
+        </div>
+
+        <!-- 第二行：Graph + Best Links -->
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+          <div class="lg:col-span-2 bg-white shadow rounded-md p-4">
+            <p class="font-bold text-gray-800 border-b pb-2 mb-4">Activity Graph</p>
+            <div class="flex justify-between items-center mb-4">
+              <div class="flex gap-2 ml-auto">
+                <button class="px-3 py-1 text-xs border rounded-md">WEEKLY</button>
+                <button
+                  class="px-3 py-1 text-xs border rounded-md bg-black text-white"
+                >
+                  MONTHLY
+                </button>
+                <button class="px-3 py-1 text-xs border rounded-md">YEARLY</button>
+              </div>
+            </div>
+            <div class="h-72 flex items-center justify-center text-gray-400 text-sm">
+              [Graph Placeholder]
+            </div>
+          </div>
+
           <div class="bg-white shadow rounded-md p-4">
-            <p class="text-sm font-bold text-gray-800">Best Links</p>
-            <ul class="text-sm mt-2 space-y-1">
-              <li class="flex justify-between">
-                <span>Link01</span><span>$126.50</span>
+            <p class="text-sm font-bold text-gray-800 border-b pb-2 mb-4">Best Links</p>
+            <ul class="text-sm mt-2 space-y-4">
+              <li>
+                <div class="flex justify-between">
+                  <span>Link01</span><span class="font-bold">$126.50</span>
+                </div>
+                <p class="text-xs text-gray-400">last click: 01-08-2022 14:32</p>
               </li>
-              <li class="flex justify-between">
-                <span>Link02</span><span>$126.50</span>
+              <li>
+                <div class="flex justify-between">
+                  <span>QRCode02</span><span class="font-bold">$126.50</span>
+                </div>
+                <p class="text-xs text-gray-400">last click: 01-07-2022 16:10</p>
               </li>
-              <li class="flex justify-between">
-                <span>Link03</span><span>$126.50</span>
-              </li>
-              <li class="flex justify-between">
-                <span>Link04</span><span>$126.50</span>
+              <li>
+                <div class="flex justify-between">
+                  <span>Barcode03</span><span class="font-bold">$126.50</span>
+                </div>
+                <p class="text-xs text-gray-400">last click: 01-06-2022 11:25</p>
               </li>
             </ul>
-            <button
-              class="mt-2 w-full text-xs bg-black text-white py-1 rounded-md"
-            >
+            <button class="mt-4 w-full text-xs bg-black text-white py-1 rounded-md">
               REPORT
             </button>
           </div>
         </div>
 
-        <!-- Graph -->
-        <div class="bg-white shadow rounded-md p-4">
-          <div class="flex justify-between items-center mb-4">
-            <p class="font-bold text-gray-800">Activity Graph</p>
-            <div class="flex gap-2">
-              <button class="px-3 py-1 text-xs border rounded-md">WEEKLY</button>
-              <button
-                class="px-3 py-1 text-xs border rounded-md bg-black text-white"
-              >
-                MONTHLY
-              </button>
-              <button class="px-3 py-1 text-xs border rounded-md">YEARLY</button>
-            </div>
-          </div>
-          <div
-            class="h-72 flex items-center justify-center text-gray-400 text-sm"
-          >
-            [Graph Placeholder]
-          </div>
-        </div>
-
-        <!-- Table -->
+        <!-- 第三行：Recent Clicks Table -->
         <div class="bg-white shadow rounded-md p-4">
           <p class="font-bold text-gray-800 mb-4">Recent Clicks</p>
           <table class="w-full border-collapse">
@@ -243,8 +254,7 @@
         </div>
       </main>
 
-      <!-- Footer -->
-      <footer class="p-6 text-sm text-gray-500 flex justify-between">
+      <footer class="p-6 text-sm text-gray-500 flex justify-between bg-[#f1f1ee]">
         <p>© 2023 - Linkify Dashboard</p>
         <div class="space-x-4">
           <a href="#" class="hover:underline">About</a>
