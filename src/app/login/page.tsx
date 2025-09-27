@@ -84,9 +84,7 @@ export default function LoginPage() {
               </span>
             </label>
 
-            {error && (
-              <p className="text-sm text-red-600">{String(error)}</p>
-            )}
+            {error && <p className="text-sm text-red-600">{String(error)}</p>}
             <button type="submit" className="btn-primary" disabled={loading}>
               {loading ? "LOGGING IN..." : "EMAIL LOGIN →"}
             </button>

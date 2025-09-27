@@ -31,7 +31,12 @@ export const registerUser = createAsyncThunk(
       username,
       password,
       auth_provider = "local",
-    }: { email: string; username: string; password: string; auth_provider?: string },
+    }: {
+      email: string;
+      username: string;
+      password: string;
+      auth_provider?: string;
+    },
     { rejectWithValue }
   ) => {
     try {
@@ -44,7 +49,10 @@ export const registerUser = createAsyncThunk(
       // API returns created user object (schema unspecified). We'll assume 201 Created with user fields.
       return res.data as { email?: string; username?: string };
     } catch (err: unknown) {
-  const e = err as { response?: { data?: { detail?: string } } | undefined; message?: string };
+      const e = err as {
+        response?: { data?: { detail?: string } } | undefined;
+        message?: string;
+      };
       const message =
         e?.response?.data?.detail || e?.message || "Register failed";
       return rejectWithValue(message);
@@ -68,7 +76,10 @@ export const loginUser = createAsyncThunk(
       });
       return res.data;
     } catch (err: unknown) {
-  const e = err as { response?: { data?: { detail?: string } } | undefined; message?: string };
+      const e = err as {
+        response?: { data?: { detail?: string } } | undefined;
+        message?: string;
+      };
       const message = e?.response?.data?.detail || e?.message || "Login failed";
       return rejectWithValue(message);
     }
@@ -88,7 +99,10 @@ const authSlice = createSlice({
         localStorage.removeItem("token_type");
       }
     },
-    setUser(state, action: PayloadAction<{ email?: string; username?: string }>) {
+    setUser(
+      state,
+      action: PayloadAction<{ email?: string; username?: string }>
+    ) {
       state.user = action.payload;
     },
   },

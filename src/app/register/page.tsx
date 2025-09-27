@@ -21,9 +21,7 @@ export default function RegisterPage() {
     e.preventDefault();
     if (!agreeTerms) return; // basic guard
     const username = `${firstName}${lastName}`.trim() || email.split("@")[0];
-    const res = await dispatch(
-      registerUser({ email, username, password })
-    );
+    const res = await dispatch(registerUser({ email, username, password }));
     if (registerUser.fulfilled.match(res)) {
       router.push("/login");
     }
@@ -127,7 +125,8 @@ export default function RegisterPage() {
                 className="mt-1"
               />
               <span>
-                By clicking &#39;Register&#39; you agree to our website LinkifyClub{" "}
+                By clicking &#39;Register&#39; you agree to our website
+                LinkifyClub{" "}
                 <a href="#" className="text-blue-600 underline">
                   Terms & Conditions
                 </a>
@@ -159,7 +158,11 @@ export default function RegisterPage() {
 
           {/* Submit */}
           {error && <p className="text-sm text-red-600">{String(error)}</p>}
-          <button onClick={handleSubmit} className="btn-primary" disabled={loading || !agreeTerms}>
+          <button
+            onClick={handleSubmit}
+            className="btn-primary"
+            disabled={loading || !agreeTerms}
+          >
             {loading ? "REGISTERING..." : "REGISTER →"}
           </button>
         </div>

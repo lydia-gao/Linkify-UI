@@ -100,8 +100,8 @@ The application currently uses mock data for demonstration:
 
 - Axios client is configured at `src/lib/api/axios.ts` and reads `NEXT_PUBLIC_API_BASE_URL`.
 - Redux Toolkit auth slice lives in `src/store/slices/authSlice.ts` with two thunks:
-   - `registerUser` → POST `/auth/` JSON body: `{ email, username, hashed_password }`
-   - `loginUser` → POST `/auth/token` form data: `username`, `password`; stores `access_token` in localStorage.
+  - `registerUser` → POST `/auth/` JSON body: `{ email, username, hashed_password }`
+  - `loginUser` → POST `/auth/token` form data: `username`, `password`; stores `access_token` in localStorage.
 - Provider is wired in `src/app/layout.tsx` via `src/store/Providers.tsx`.
 
 You can test flows using the Login and Register pages now. Successful login redirects to `/dashboard`.
