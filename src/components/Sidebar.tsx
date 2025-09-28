@@ -6,6 +6,7 @@ import {
   List,
   Folder,
   ChevronDown,
+  LineChart,
 } from "lucide-react";
 import Image from "next/image";
 import NextLink from "next/link";
@@ -55,7 +56,7 @@ export default function Sidebar() {
           "Dashboard",
           <LayoutDashboard className="w-4 h-4" />
         )}
-        {navItem("/analysis", "Analysis", <LayoutDashboard className="w-4 h-4" />)}
+        {navItem("/analysis", "Analysis", <LineChart className="w-4 h-4" />)}
         {navItem("/links", "All Links", <LinkIcon className="w-4 h-4" />)}
         {navItem("/test", "Click List", <List className="w-4 h-4" />)}
 

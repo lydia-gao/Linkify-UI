@@ -8,6 +8,9 @@ import { useState } from "react";
 
 export default function NewLinkPage() {
   const [preview, setPreview] = useState<string | null>(null);
+  const [codeType, setCodeType] = useState<"none" | "qrcode" | "barcode">(
+    "none"
+  );
 
   return (
     <Layout>
@@ -26,6 +29,7 @@ export default function NewLinkPage() {
           <CardContent className="p-6 grid grid-cols-1 lg:grid-cols-3 gap-6 relative">
             {/* Left form */}
             <div className="lg:col-span-2 space-y-6 text-sm">
+              {/* URL */}
               <div>
                 <label className="block font-bold text-gray-700">URL</label>
                 <Input
@@ -34,6 +38,7 @@ export default function NewLinkPage() {
                   className="mt-2"
                 />
               </div>
+              {/* Name */}
               <div>
                 <label className="block font-bold text-gray-700">
                   Link Name
@@ -44,22 +49,48 @@ export default function NewLinkPage() {
                   className="mt-2"
                 />
               </div>
+              {/* Generate code */}
               <div>
-                <label className="block font-bold text-gray-700">
-                  Description
+                <label className="block font-bold text-gray-700 mb-2">
+                  Generate Code
                 </label>
-                <textarea
-                  rows={3}
-                  placeholder="Enter description"
-                  className="w-full rounded-md border px-3 py-2 text-sm focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring mt-2"
-                />
+                <div className="inline-flex rounded-md border border-gray-300 overflow-hidden bg-white">
+                  {[
+                    { key: "none", label: "None" },
+                    { key: "qrcode", label: "QR code" },
+                    { key: "barcode", label: "Barcode" },
+                  ].map((opt, idx) => {
+                    const active = codeType === (opt.key as typeof codeType);
+                    return (
+                      <button
+                        key={opt.key}
+                        type="button"
+                        onClick={() => setCodeType(opt.key as typeof codeType)}
+                        className={
+                          "px-3 py-1.5 text-sm focus:outline-none transition " +
+                          (active
+                            ? "bg-black text-white"
+                            : "bg-white text-gray-700 hover:bg-gray-100") +
+                          (idx !== 2 ? " border-r border-gray-300" : "")
+                        }
+                        aria-pressed={active}
+                      >
+                        {opt.label}
+                      </button>
+                    );
+                  })}
+                </div>
+                <p className="text-xs text-gray-500 mt-1">
+                  Choose whether to generate a QR code or a barcode for this
+                  link.
+                </p>
               </div>
+              {/* Alias */}
               <div>
-                <label className="block font-bold text-gray-700">
-                  Category
-                </label>
-                <Input type="text" placeholder="Category" className="mt-2" />
+                <label className="block font-bold text-gray-700">Alias</label>
+                <Input type="text" placeholder="Alias" className="mt-2" />
               </div>
+              {/* Owner / Expiration */}
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
                   <label className="block font-bold text-gray-700">
@@ -78,10 +109,25 @@ export default function NewLinkPage() {
                   <Input type="number" placeholder="0" className="mt-2" />
                 </div>
               </div>
+              {/* Category */}
               <div>
-                <label className="block font-bold text-gray-700">Alias</label>
-                <Input type="text" placeholder="Alias" className="mt-2" />
+                <label className="block font-bold text-gray-700">
+                  Category
+                </label>
+                <Input type="text" placeholder="Category" className="mt-2" />
               </div>
+              {/* Description */}
+              <div>
+                <label className="block font-bold text-gray-700">
+                  Description
+                </label>
+                <textarea
+                  rows={3}
+                  placeholder="Enter description"
+                  className="w-full rounded-md border px-3 py-2 text-sm focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring mt-2"
+                />
+              </div>
+              {/* Tags */}
               <div>
                 <label className="block font-bold text-gray-700">Tags</label>
                 <div className="mt-2 w-full border rounded-md px-3 py-2 flex flex-wrap gap-2">
@@ -111,6 +157,7 @@ export default function NewLinkPage() {
                   <span className="text-gray-500">[ Link Preview Image ]</span>
                 )}
               </div>
+
               <label className="border-2 border-dashed border-gray-300 rounded-md p-6 text-center text-gray-500 cursor-pointer block">
                 <input
                   type="file"
@@ -141,6 +188,20 @@ export default function NewLinkPage() {
                   </span>
                 </div>
               </div>
+              {/* Code preview area: QR/Barcode, controlled by segmented toggle */}
+              {codeType !== "none" && (
+                <div className="w-full h-40 bg-white border border-dashed border-gray-300 rounded-md flex items-center justify-center">
+                  <div className="text-center">
+                    <div className="text-gray-800 font-semibold mb-1">
+                      {codeType === "qrcode" ? "QR Code" : "Barcode"} Preview
+                    </div>
+                    <div className="text-xs text-gray-500">
+                      Placeholder for generated {codeType}. This will update
+                      after creation.
+                    </div>
+                  </div>
+                </div>
+              )}
             </div>
 
             {/* Actions bottom */}

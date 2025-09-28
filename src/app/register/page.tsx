@@ -3,6 +3,7 @@
 import { useState } from "react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
+import Link from "next/link";
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
 import { registerUser } from "@/store/slices/authSlice";
 
@@ -66,6 +67,13 @@ export default function RegisterPage() {
           <div className="flex items-center gap-2">
             <div className="h-px flex-1 bg-gray-300"></div>
             <span className="text-sm text-gray-500">OR</span>
+            {/* Switch to Login */}
+            <p className="text-sm text-gray-600">
+              Already have an account?{" "}
+              <Link href="/login" className="text-blue-600 underline">
+                Log in
+              </Link>
+            </p>
             <div className="h-px flex-1 bg-gray-300"></div>
           </div>
 

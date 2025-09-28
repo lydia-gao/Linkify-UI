@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
+import Link from "next/link";
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
 import { loginUser } from "@/store/slices/authSlice";
 
@@ -100,6 +101,14 @@ export default function LoginPage() {
             />
             <span className="font-medium">Google</span>
           </button>
+
+          {/* Switch to Register */}
+          <p className="text-sm text-gray-600">
+            Don't have an account?{" "}
+            <Link href="/register" className="text-blue-600 underline">
+              Sign up
+            </Link>
+          </p>
 
           {/* Terms */}
           <p className="text-xs text-gray-500">

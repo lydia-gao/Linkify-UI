@@ -73,17 +73,17 @@ export default function DashboardPage() {
           ))}
         </div>
 
-        {/* Row 2: Recommendations (placeholders) */}
+        {/* Row 2: AI Recommendations reserved */}
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
           <Card className="lg:col-span-2 bg-[#fafaf8] border border-gray-200">
             <CardHeader className="pb-2">
               <CardTitle className="font-bold text-gray-800">
-                Recommendations
+                AI Recommendation Area
               </CardTitle>
             </CardHeader>
             <CardContent>
               <div className="h-72 flex items-center justify-center text-gray-400 text-sm">
-                [Personalized recommendations placeholder]
+                Reserved for future AI-driven activity insights and charts.
               </div>
             </CardContent>
           </Card>
@@ -91,15 +91,13 @@ export default function DashboardPage() {
           <Card className="bg-[#fafaf8] border border-gray-200">
             <CardHeader className="pb-2">
               <CardTitle className="text-sm font-bold text-gray-800">
-                Suggestions
+                AI Best Links Suggestions
               </CardTitle>
             </CardHeader>
             <CardContent>
-              <ul className="text-sm mt-2 space-y-3 text-gray-700">
-                <li>• Optimize top-performing links with custom aliases</li>
-                <li>• Add UTM parameters to improve attribution</li>
-                <li>• Try QR codes for offline campaigns</li>
-              </ul>
+              <div className="text-sm text-gray-500">
+                Reserved for personalized link recommendations powered by AI.
+              </div>
             </CardContent>
           </Card>
         </div>

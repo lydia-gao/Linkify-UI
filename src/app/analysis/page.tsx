@@ -22,7 +22,7 @@ export default function AnalysisPage() {
       </section>
 
       <main className="p-6 space-y-6 bg-[#f1f1ee]">
-        {/* Row: Graph + Best Links (moved from Dashboard) */}
+        {/* Row: Graph + Best Links */}
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
           <Card className="lg:col-span-2 bg-[#fafaf8] border border-gray-200">
             <CardHeader className="pb-2">
@@ -80,7 +80,9 @@ export default function AnalysisPage() {
                       <span>{b.name}</span>
                       <span className="font-bold">{b.amount}</span>
                     </div>
-                    <p className="text-xs text-gray-400">last click: {b.last}</p>
+                    <p className="text-xs text-gray-400">
+                      last click: {b.last}
+                    </p>
                   </li>
                 ))}
               </ul>
