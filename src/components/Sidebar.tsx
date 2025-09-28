@@ -55,6 +55,7 @@ export default function Sidebar() {
           "Dashboard",
           <LayoutDashboard className="w-4 h-4" />
         )}
+        {navItem("/analysis", "Analysis", <LayoutDashboard className="w-4 h-4" />)}
         {navItem("/links", "All Links", <LinkIcon className="w-4 h-4" />)}
         {navItem("/test", "Click List", <List className="w-4 h-4" />)}
 
