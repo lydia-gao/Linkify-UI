@@ -13,13 +13,13 @@ export default function LoginPage() {
   const [remember, setRemember] = useState(true);
   const dispatch = useAppDispatch();
   const router = useRouter();
-  const { loading, error, accessToken } = useAppSelector((s) => s.auth);
+  const { loading, error, access_token } = useAppSelector((s) => s.auth);
 
   useEffect(() => {
-    if (accessToken) {
+    if (access_token) {
       router.push("/dashboard");
     }
-  }, [accessToken, router]);
+  }, [access_token, router]);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -104,7 +104,7 @@ export default function LoginPage() {
 
           {/* Switch to Register */}
           <p className="text-sm text-gray-600">
-            Don't have an account?{" "}
+            Don&apos;t have an account?{" "}
             <Link href="/register" className="text-blue-600 underline">
               Sign up
             </Link>

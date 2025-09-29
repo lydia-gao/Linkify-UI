@@ -5,7 +5,7 @@ import api from "@/lib/api/axios";
 type TokenResponse = { access_token: string; token_type: string };
 
 export type AuthState = {
-  accessToken: string | null;
+  access_token: string | null;
   tokenType: string | null;
   user: { email?: string; username?: string } | null;
   loading: boolean;
@@ -13,7 +13,7 @@ export type AuthState = {
 };
 
 const initialState: AuthState = {
-  accessToken:
+  access_token:
     typeof window !== "undefined" ? localStorage.getItem("access_token") : null,
   tokenType:
     typeof window !== "undefined" ? localStorage.getItem("token_type") : null,
@@ -91,7 +91,7 @@ const authSlice = createSlice({
   initialState,
   reducers: {
     logout(state) {
-      state.accessToken = null;
+      state.access_token = null;
       state.tokenType = null;
       state.user = null;
       if (typeof window !== "undefined") {
@@ -128,7 +128,7 @@ const authSlice = createSlice({
       })
       .addCase(loginUser.fulfilled, (state, action) => {
         state.loading = false;
-        state.accessToken = action.payload.access_token;
+        state.access_token = action.payload.access_token;
         state.tokenType = action.payload.token_type;
         if (typeof window !== "undefined") {
           localStorage.setItem("access_token", action.payload.access_token);
