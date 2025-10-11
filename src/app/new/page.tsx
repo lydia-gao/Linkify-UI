@@ -14,13 +14,17 @@ import { createLink, resetResult } from "@/store/slices/linkSlice";
 export default function NewLinkPage() {
   const dispatch = useDispatch<AppDispatch>();
   type LinkResult = { id: string | number; image_url?: string } | null;
-  const { loading, error, result } = useSelector((state: RootState) => state.link) as {
+  const { loading, error, result } = useSelector(
+    (state: RootState) => state.link
+  ) as {
     loading: boolean;
     error: string | null;
     result: LinkResult;
   };
   const [preview, setPreview] = useState<string | null>(null);
-  const [codeType, setCodeType] = useState<"none" | "qrcode" | "barcode">("none");
+  const [codeType, setCodeType] = useState<"none" | "qrcode" | "barcode">(
+    "none"
+  );
   const [form, setForm] = useState({
     original_url: "",
     title: "",
@@ -32,20 +36,24 @@ export default function NewLinkPage() {
     tags: "",
   });
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+  const handleChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) => {
     setForm({ ...form, [e.target.name]: e.target.value });
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     dispatch(resetResult());
-    dispatch(createLink({
-      codeType,
-      original_url: form.original_url,
-      title: form.title,
-      description: form.description,
-      alias: codeType === "none" ? form.alias : undefined,
-    }));
+    dispatch(
+      createLink({
+        codeType,
+        original_url: form.original_url,
+        title: form.title,
+        description: form.description,
+        alias: codeType === "none" ? form.alias : undefined,
+      })
+    );
   };
 
   useEffect(() => {
@@ -65,7 +73,10 @@ export default function NewLinkPage() {
         <main className="p-6 bg-[#f1f1ee]">
           <Card className="bg-[#fafaf8] border border-gray-200 rounded-md p-0">
             <CardContent className="p-6 grid grid-cols-1 lg:grid-cols-3 gap-6 relative">
-              <form className="lg:col-span-2 space-y-6 text-sm" onSubmit={handleSubmit}>
+              <form
+                className="lg:col-span-2 space-y-6 text-sm"
+                onSubmit={handleSubmit}
+              >
                 {/* URL */}
                 <div>
                   <label className="block font-bold text-gray-700">URL</label>
@@ -81,7 +92,9 @@ export default function NewLinkPage() {
                 </div>
                 {/* Name */}
                 <div>
-                  <label className="block font-bold text-gray-700">Link Name</label>
+                  <label className="block font-bold text-gray-700">
+                    Link Name
+                  </label>
                   <Input
                     type="text"
                     name="title"
@@ -93,7 +106,9 @@ export default function NewLinkPage() {
                 </div>
                 {/* Generate code */}
                 <div>
-                  <label className="block font-bold text-gray-700 mb-2">Generate Code</label>
+                  <label className="block font-bold text-gray-700 mb-2">
+                    Generate Code
+                  </label>
                   <div className="inline-flex rounded-md border border-gray-300 overflow-hidden bg-white">
                     {[
                       { key: "none", label: "None" },
@@ -105,7 +120,9 @@ export default function NewLinkPage() {
                         <button
                           key={opt.key}
                           type="button"
-                          onClick={() => setCodeType(opt.key as typeof codeType)}
+                          onClick={() =>
+                            setCodeType(opt.key as typeof codeType)
+                          }
                           className={
                             "px-3 py-1.5 text-sm focus:outline-none transition " +
                             (active
@@ -120,7 +137,10 @@ export default function NewLinkPage() {
                       );
                     })}
                   </div>
-                  <p className="text-xs text-gray-500 mt-1">Choose whether to generate a QR code or a barcode for this link.</p>
+                  <p className="text-xs text-gray-500 mt-1">
+                    Choose whether to generate a QR code or a barcode for this
+                    link.
+                  </p>
                 </div>
                 {/* Alias */}
                 <div>
@@ -138,7 +158,9 @@ export default function NewLinkPage() {
                 {/* Owner / Expiration */}
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <div>
-                    <label className="block font-bold text-gray-700">Owner Name</label>
+                    <label className="block font-bold text-gray-700">
+                      Owner Name
+                    </label>
                     <Input
                       type="text"
                       name="owner"
@@ -149,7 +171,9 @@ export default function NewLinkPage() {
                     />
                   </div>
                   <div>
-                    <label className="block font-bold text-gray-700">Expiration (days)</label>
+                    <label className="block font-bold text-gray-700">
+                      Expiration (days)
+                    </label>
                     <Input
                       type="number"
                       name="expiration"
@@ -162,7 +186,9 @@ export default function NewLinkPage() {
                 </div>
                 {/* Category */}
                 <div>
-                  <label className="block font-bold text-gray-700">Category</label>
+                  <label className="block font-bold text-gray-700">
+                    Category
+                  </label>
                   <Input
                     type="text"
                     name="category"
@@ -174,7 +200,9 @@ export default function NewLinkPage() {
                 </div>
                 {/* Description */}
                 <div>
-                  <label className="block font-bold text-gray-700">Description</label>
+                  <label className="block font-bold text-gray-700">
+                    Description
+                  </label>
                   <textarea
                     rows={3}
                     name="description"
@@ -199,26 +227,40 @@ export default function NewLinkPage() {
                 {/* Feedback */}
                 {loading && <div className="text-blue-600">Creating...</div>}
                 {error && <div className="text-red-600">Error: {error}</div>}
-                {result && <div className="text-green-600">Created! ID: {typeof result.id === "string" || typeof result.id === "number" ? result.id : JSON.stringify(result)}</div>}
+                {result && (
+                  <div className="text-green-600">
+                    Created! ID:{" "}
+                    {typeof result.id === "string" ||
+                    typeof result.id === "number"
+                      ? result.id
+                      : JSON.stringify(result)}
+                  </div>
+                )}
                 {/* Actions bottom */}
                 <div className="flex justify-end gap-3 pt-2">
-                  <Button type="submit" className="px-4 py-2 bg-black text-white text-sm rounded-md" disabled={loading}>
+                  <Button
+                    type="submit"
+                    className="px-4 py-2 bg-black text-white text-sm rounded-md"
+                    disabled={loading}
+                  >
                     CREATE
                   </Button>
                   <Button
                     type="button"
                     variant="secondary"
                     className="px-4 py-2 text-sm rounded-md"
-                    onClick={() => setForm({
-                      original_url: "",
-                      title: "",
-                      description: "",
-                      alias: "",
-                      owner: "",
-                      expiration: "",
-                      category: "",
-                      tags: "",
-                    })}
+                    onClick={() =>
+                      setForm({
+                        original_url: "",
+                        title: "",
+                        description: "",
+                        alias: "",
+                        owner: "",
+                        expiration: "",
+                        category: "",
+                        tags: "",
+                      })
+                    }
                   >
                     CANCEL
                   </Button>
@@ -235,7 +277,9 @@ export default function NewLinkPage() {
                       className="w-full h-full object-cover"
                     />
                   ) : (
-                    <span className="text-gray-500">[ Link Preview Image ]</span>
+                    <span className="text-gray-500">
+                      [ Link Preview Image ]
+                    </span>
                   )}
                 </div>
                 <label className="border-2 border-dashed border-gray-300 rounded-md p-6 text-center text-gray-500 cursor-pointer block">
@@ -250,7 +294,8 @@ export default function NewLinkPage() {
                       setPreview(url);
                     }}
                   />
-                  Drop your image here, or browse<br />
+                  Drop your image here, or browse
+                  <br />
                   <span className="text-xs">Jpeg, png are allowed</span>
                 </label>
                 {/* Code preview area: QR/Barcode, controlled by segmented toggle */}
@@ -269,7 +314,8 @@ export default function NewLinkPage() {
                         />
                       ) : (
                         <div className="text-xs text-gray-500">
-                          Placeholder for generated {codeType}. This will update after creation.
+                          Placeholder for generated {codeType}. This will update
+                          after creation.
                         </div>
                       )}
                     </div>
