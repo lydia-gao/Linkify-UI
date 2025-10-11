@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>All Links - Linkify</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <script>
+      function toggleCategories() {
+        const submenu = document.getElementById("categories-submenu");
+        submenu.classList.toggle("hidden");
+      }
+      window.onload = () => {
+        lucide.createIcons();
+      };
+    </script>
+  </head>
+  <body class="bg-[#f1f1ee] min-h-screen flex">
+    <!-- Sidebar -->
+    <aside class="w-56 bg-white border-r flex flex-col">
+      <div class="p-6 flex justify-center">
+        <img src="../logo.png" alt="Linkify Logo" class="h-8 w-auto" />
+      </div>
+
+      <div class="flex justify-center mb-6">
+        <button
+          class="w-44 px-4 py-2 bg-black text-white text-xs rounded-md hover:bg-gray-800"
+        >
+          + CREATE NEW
+        </button>
+      </div>
+
+      <nav class="flex-1 px-3 space-y-2">
+        <a
+          href="dashboard.html"
+          class="flex items-center gap-2 w-44 mx-auto px-3 py-2 text-sm font-medium text-gray-700 hover:bg-gray-100 rounded-md"
+        >
+          <i data-lucide="layout-dashboard" class="w-4 h-4"></i>
+          Dashboard
+        </a>
+        <a
+          href="#"
+          class="flex items-center gap-2 w-44 mx-auto px-3 py-2 text-sm font-medium bg-indigo-600 text-white rounded-md"
+        >
+          <i data-lucide="link" class="w-4 h-4"></i>
+          All Links
+        </a>
+        <a
+          href="click-list.html"
+          class="flex items-center gap-2 w-44 mx-auto px-3 py-2 text-sm font-medium text-gray-700 hover:bg-gray-100 rounded-md"
+        >
+          <i data-lucide="list" class="w-4 h-4"></i>
+          Click List
+        </a>
+
+        <div class="w-44 mx-auto">
+          <button
+            onclick="toggleCategories()"
+            class="w-full flex items-center justify-between px-3 py-2 text-sm font-medium text-gray-700 hover:bg-gray-100 rounded-md"
+          >
+            <span class="flex items-center gap-2">
+              <i data-lucide="folder" class="w-4 h-4"></i>
+              Categories
+            </span>
+            <span>⌄</span>
+          </button>
+          <div id="categories-submenu" class="hidden ml-6 mt-1 space-y-1">
+            <a href="#" class="block text-sm text-gray-600 hover:underline">Links</a>
+            <a href="#" class="block text-sm text-gray-600 hover:underline">QR Codes</a>
+            <a href="#" class="block text-sm text-gray-600 hover:underline">Barcodes</a>
+          </div>
+        </div>
+      </nav>
+    </aside>
+
+    <!-- Main -->
+    <div class="flex-1 flex flex-col bg-[#f1f1ee]">
+      <!-- Top bar -->
+      <header class="h-16 bg-white border-b flex items-center justify-end px-6 gap-6">
+        <i data-lucide="search" class="w-5 h-5 text-gray-600"></i>
+        <i data-lucide="bell" class="w-5 h-5 text-gray-600"></i>
+        <button class="px-3 py-1 border rounded-md text-sm text-gray-700 bg-white">
+          ADMIN ⌄
+        </button>
+      </header>
+
+      <!-- Page title area -->
+      <section class="bg-[#f1f1ee] border-b px-6 py-4 flex items-center justify-between">
+        <div>
+          <h2 class="font-bold text-gray-800">All Links</h2>
+          <p class="text-sm text-gray-500">Home > All Products</p>
+        </div>
+      </section>
+
+      <!-- Content -->
+      <main class="p-6 space-y-6 bg-[#f1f1ee]">
+        <div class="flex flex-col gap-6">
+          <!-- Link Card Example -->
+          <div class="bg-white shadow rounded-md p-4 text-sm">
+            <div class="flex justify-between">
+              <div>
+                <h3 class="font-bold text-gray-800">Example Website Homepage</h3>
+                <p class="text-xs text-gray-600">https://example.com/your/long/url</p>
+                <p class="text-xs font-semibold text-gray-800">https://{your-domain}/(alias-or-code)</p>
+                <p class="mt-2 text-xs text-gray-500">Summary<br />Good link in Google.</p>
+              </div>
+              <img src="../white_link.png" alt="Link Thumbnail" class="w-16 h-16 rounded-md" />
+            </div>
+            <div class="flex justify-between items-start mt-4">
+              <div class="flex flex-col gap-2 text-xs text-gray-500">
+                <span>Clicks</span>
+                <span>Expiration</span>
+              </div>
+              <div class="flex flex-col gap-2 text-sm text-gray-700 text-right">
+                <span>1269</span>
+                <span>2023-12-31</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Duplicate card -->
+          <div class="bg-white shadow rounded-md p-4 text-sm">
+            <div class="flex justify-between">
+              <div>
+                <h3 class="font-bold text-gray-800">Example Website Homepage</h3>
+                <p class="text-xs text-gray-600">https://example.com/your/long/url</p>
+                <p class="text-xs font-semibold text-gray-800">https://{your-domain}/(alias-or-code)</p>
+                <p class="mt-2 text-xs text-gray-500">Summary<br />Good link in Google.</p>
+              </div>
+              <img src="../white_link.png" alt="Link Thumbnail" class="w-16 h-16 rounded-md" />
+            </div>
+            <div class="flex justify-between items-start mt-4">
+              <div class="flex flex-col gap-2 text-xs text-gray-500">
+                <span>Clicks</span>
+                <span>Expiration</span>
+              </div>
+              <div class="flex flex-col gap-2 text-sm text-gray-700 text-right">
+                <span>1269</span>
+                <span>2023-12-31</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- More cards as needed -->
+          <div class="bg-white shadow rounded-md p-4 text-sm">
+            <div class="flex justify-between">
+              <div>
+                <h3 class="font-bold text-gray-800">Example Website Homepage</h3>
+                <p class="text-xs text-gray-600">https://example.com/your/long/url</p>
+                <p class="text-xs font-semibold text-gray-800">https://{your-domain}/(alias-or-code)</p>
+                <p class="mt-2 text-xs text-gray-500">Summary<br />Good link in Google.</p>
+              </div>
+              <img src="../white_link.png" alt="Link Thumbnail" class="w-16 h-16 rounded-md" />
+            </div>
+            <div class="flex justify-between items-start mt-4">
+              <div class="flex flex-col gap-2 text-xs text-gray-500">
+                <span>Clicks</span>
+                <span>Expiration</span>
+              </div>
+              <div class="flex flex-col gap-2 text-sm text-gray-700 text-right">
+                <span>1269</span>
+                <span>2023-12-31</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="bg-white shadow rounded-md p-4 text-sm">
+            <div class="flex justify-between">
+              <div>
+                <h3 class="font-bold text-gray-800">Example Website Homepage</h3>
+                <p class="text-xs text-gray-600">https://example.com/your/long/url</p>
+                <p class="text-xs font-semibold text-gray-800">https://{your-domain}/(alias-or-code)</p>
+                <p class="mt-2 text-xs text-gray-500">Summary<br />Good link in Google.</p>
+              </div>
+              <img src="../white_link.png" alt="Link Thumbnail" class="w-16 h-16 rounded-md" />
+            </div>
+            <div class="flex justify-between items-start mt-4">
+              <div class="flex flex-col gap-2 text-xs text-gray-500">
+                <span>Clicks</span>
+                <span>Expiration</span>
+              </div>
+              <div class="flex flex-col gap-2 text-sm text-gray-700 text-right">
+                <span>1269</span>
+                <span>2023-12-31</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Pagination -->
+        <div class="flex justify-center mt-6">
+          <nav class="inline-flex space-x-2 text-sm">
+            <a href="#" class="px-3 py-1 bg-black text-white rounded">1</a>
+            <a href="#" class="px-3 py-1 bg-white border rounded hover:bg-gray-100">2</a>
+            <a href="#" class="px-3 py-1 bg-white border rounded hover:bg-gray-100">3</a>
+            <a href="#" class="px-3 py-1 bg-white border rounded hover:bg-gray-100">4</a>
+            <span class="px-3 py-1">...</span>
+            <a href="#" class="px-3 py-1 bg-white border rounded hover:bg-gray-100">10</a>
+            <a href="#" class="px-3 py-1 bg-white border rounded hover:bg-gray-100">NEXT</a>
+          </nav>
+        </div>
+      </main>
+
+      <footer class="p-6 text-sm text-gray-500 flex justify-between bg-[#f1f1ee]">
+        <p>© 2023 - Linkify Dashboard</p>
+        <div class="space-x-4">
+          <a href="#" class="hover:underline">About</a>
+          <a href="#" class="hover:underline">Careers</a>
+          <a href="#" class="hover:underline">Policy</a>
+          <a href="#" class="hover:underline">Contact</a>
+        </div>
+      </footer>
+    </div>
+  </body>
+</html>
