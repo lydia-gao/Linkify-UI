@@ -42,18 +42,10 @@ export default function CategoryLinksPage() {
                         {item.short_url}
                       </p>
                       <p className="mt-2 text-xs text-gray-500 whitespace-pre-line">
-                        {item.description}
+                        {item.description || item.summary}
                       </p>
                     </div>
-                    {item.image_url && (
-                      <Image
-                        src={item.image_url}
-                        alt="Link Thumbnail"
-                        width={64}
-                        height={64}
-                        className="w-16 h-16 rounded-md object-cover"
-                      />
-                    )}
+                    {/* Links 页面不显示图片 */}
                   </div>
                   <div className="flex justify-between items-start mt-4">
                     <div className="flex flex-col gap-2 text-xs text-gray-500">

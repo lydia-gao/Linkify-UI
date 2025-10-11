@@ -28,7 +28,7 @@ export default function BarcodesPage() {
                 className="bg-[#fafaf8] border border-gray-200 rounded-md"
               >
                 <CardContent className="p-4 text-sm">
-                  <div className="flex justify-between gap-4">
+                  <div className="relative flex gap-4">
                     <div>
                       <h3 className="font-bold text-gray-800 mb-1.5">
                         {item.title}
@@ -40,24 +40,24 @@ export default function BarcodesPage() {
                         {item.short_url}
                       </p>
                       <p className="mt-2 text-xs text-gray-500 whitespace-pre-line">
-                        {item.description}
+                        {item.description || item.summary}
                       </p>
                     </div>
-                    {item.image_url && (
-                      <Image
-                        src={item.image_url}
-                        alt="Barcode"
-                        width={64}
-                        height={64}
-                        className="w-16 h-16 rounded-md object-cover"
-                      />
-                    )}
+                      <img
+                        src={`https://linkify-images.s3.us-east-2.amazonaws.com/${item.s3_key}`}
+                      alt="Barcode"
+                      width={64}
+                      height={64}
+                      className="w-16 h-16 rounded-md object-cover absolute top-0 right-0"
+                    />
                   </div>
                   <div className="flex justify-between items-start mt-4">
                     <div className="flex flex-col gap-2 text-xs text-gray-500">
+                      <span>Clicks</span>
                       <span>Expiration</span>
                     </div>
                     <div className="flex flex-col gap-2 text-sm text-gray-700 text-right">
+                      <span>{item.clicks}</span>
                       <span>{item.expiration}</span>
                     </div>
                   </div>
