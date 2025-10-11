@@ -5,57 +5,95 @@ import RequireAuth from "@/components/RequireAuth";
 import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { AppDispatch, RootState } from "@/store";
+import { createLink, resetResult } from "@/store/slices/linkSlice";
+// import api from "@/lib/api/axios";
 
 export default function NewLinkPage() {
+  const dispatch = useDispatch<AppDispatch>();
+  type LinkResult = { id: string | number; image_url?: string } | null;
+  const { loading, error, result } = useSelector((state: RootState) => state.link) as {
+    loading: boolean;
+    error: string | null;
+    result: LinkResult;
+  };
   const [preview, setPreview] = useState<string | null>(null);
-  const [codeType, setCodeType] = useState<"none" | "qrcode" | "barcode">(
-    "none"
-  );
+  const [codeType, setCodeType] = useState<"none" | "qrcode" | "barcode">("none");
+  const [form, setForm] = useState({
+    original_url: "",
+    title: "",
+    description: "",
+    alias: "",
+    owner: "",
+    expiration: "",
+    category: "",
+    tags: "",
+  });
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    setForm({ ...form, [e.target.name]: e.target.value });
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    dispatch(resetResult());
+    dispatch(createLink({
+      codeType,
+      original_url: form.original_url,
+      title: form.title,
+      description: form.description,
+      alias: codeType === "none" ? form.alias : undefined,
+    }));
+  };
+
+  useEffect(() => {
+    // 创建成功后直接用 image_url 作为预览
+    if (result && codeType !== "none" && result.image_url) {
+      setPreview(result.image_url);
+    }
+    // 创建普通链接时清空预览
+    if (result && codeType === "none") {
+      setPreview(null);
+    }
+  }, [result, codeType]);
 
   return (
     <RequireAuth>
       <Layout>
-        {/* Page title area */}
-        <section className="bg-[#f1f1ee] border-b border-gray-200 px-6 py-4 flex items-center justify-between">
-          <div>
-            <h2 className="font-bold text-gray-800">Create New Link</h2>
-            <p className="text-sm text-gray-500">
-              Home &gt; All Links &gt; Create New
-            </p>
-          </div>
-        </section>
-
         <main className="p-6 bg-[#f1f1ee]">
           <Card className="bg-[#fafaf8] border border-gray-200 rounded-md p-0">
             <CardContent className="p-6 grid grid-cols-1 lg:grid-cols-3 gap-6 relative">
-              {/* Left form */}
-              <div className="lg:col-span-2 space-y-6 text-sm">
+              <form className="lg:col-span-2 space-y-6 text-sm" onSubmit={handleSubmit}>
                 {/* URL */}
                 <div>
                   <label className="block font-bold text-gray-700">URL</label>
                   <Input
                     type="url"
+                    name="original_url"
                     placeholder="https://example.com/your-link"
                     className="mt-2"
+                    value={form.original_url}
+                    onChange={handleChange}
+                    required
                   />
                 </div>
                 {/* Name */}
                 <div>
-                  <label className="block font-bold text-gray-700">
-                    Link Name
-                  </label>
+                  <label className="block font-bold text-gray-700">Link Name</label>
                   <Input
                     type="text"
+                    name="title"
                     placeholder="Enter link name"
                     className="mt-2"
+                    value={form.title}
+                    onChange={handleChange}
                   />
                 </div>
                 {/* Generate code */}
                 <div>
-                  <label className="block font-bold text-gray-700 mb-2">
-                    Generate Code
-                  </label>
+                  <label className="block font-bold text-gray-700 mb-2">Generate Code</label>
                   <div className="inline-flex rounded-md border border-gray-300 overflow-hidden bg-white">
                     {[
                       { key: "none", label: "None" },
@@ -67,9 +105,7 @@ export default function NewLinkPage() {
                         <button
                           key={opt.key}
                           type="button"
-                          onClick={() =>
-                            setCodeType(opt.key as typeof codeType)
-                          }
+                          onClick={() => setCodeType(opt.key as typeof codeType)}
                           className={
                             "px-3 py-1.5 text-sm focus:outline-none transition " +
                             (active
@@ -84,88 +120,124 @@ export default function NewLinkPage() {
                       );
                     })}
                   </div>
-                  <p className="text-xs text-gray-500 mt-1">
-                    Choose whether to generate a QR code or a barcode for this
-                    link.
-                  </p>
+                  <p className="text-xs text-gray-500 mt-1">Choose whether to generate a QR code or a barcode for this link.</p>
                 </div>
                 {/* Alias */}
                 <div>
                   <label className="block font-bold text-gray-700">Alias</label>
-                  <Input type="text" placeholder="Alias" className="mt-2" />
+                  <Input
+                    type="text"
+                    name="alias"
+                    placeholder="Alias"
+                    className="mt-2"
+                    value={form.alias}
+                    onChange={handleChange}
+                    disabled={codeType !== "none"}
+                  />
                 </div>
                 {/* Owner / Expiration */}
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <div>
-                    <label className="block font-bold text-gray-700">
-                      Owner Name
-                    </label>
+                    <label className="block font-bold text-gray-700">Owner Name</label>
                     <Input
                       type="text"
+                      name="owner"
                       placeholder="Owner name"
                       className="mt-2"
+                      value={form.owner}
+                      onChange={handleChange}
                     />
                   </div>
                   <div>
-                    <label className="block font-bold text-gray-700">
-                      Expiration (days)
-                    </label>
-                    <Input type="number" placeholder="0" className="mt-2" />
+                    <label className="block font-bold text-gray-700">Expiration (days)</label>
+                    <Input
+                      type="number"
+                      name="expiration"
+                      placeholder="0"
+                      className="mt-2"
+                      value={form.expiration}
+                      onChange={handleChange}
+                    />
                   </div>
                 </div>
                 {/* Category */}
                 <div>
-                  <label className="block font-bold text-gray-700">
-                    Category
-                  </label>
-                  <Input type="text" placeholder="Category" className="mt-2" />
+                  <label className="block font-bold text-gray-700">Category</label>
+                  <Input
+                    type="text"
+                    name="category"
+                    placeholder="Category"
+                    className="mt-2"
+                    value={form.category}
+                    onChange={handleChange}
+                  />
                 </div>
                 {/* Description */}
                 <div>
-                  <label className="block font-bold text-gray-700">
-                    Description
-                  </label>
+                  <label className="block font-bold text-gray-700">Description</label>
                   <textarea
                     rows={3}
+                    name="description"
                     placeholder="Enter description"
                     className="w-full rounded-md border px-3 py-2 text-sm focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring mt-2"
+                    value={form.description}
+                    onChange={handleChange}
                   />
                 </div>
                 {/* Tags */}
                 <div>
                   <label className="block font-bold text-gray-700">Tags</label>
-                  <div className="mt-2 w-full border rounded-md px-3 py-2 flex flex-wrap gap-2">
-                    {"e-commerce,Shoes,sales,Industrial"
-                      .split(",")
-                      .map((tag) => (
-                        <span
-                          key={tag}
-                          className="bg-gray-800 text-white text-xs px-2 py-1 rounded-full"
-                        >
-                          {tag}
-                        </span>
-                      ))}
-                  </div>
+                  <Input
+                    type="text"
+                    name="tags"
+                    placeholder="Comma separated tags"
+                    className="mt-2"
+                    value={form.tags}
+                    onChange={handleChange}
+                  />
                 </div>
-              </div>
-
+                {/* Feedback */}
+                {loading && <div className="text-blue-600">Creating...</div>}
+                {error && <div className="text-red-600">Error: {error}</div>}
+                {result && <div className="text-green-600">Created! ID: {typeof result.id === "string" || typeof result.id === "number" ? result.id : JSON.stringify(result)}</div>}
+                {/* Actions bottom */}
+                <div className="flex justify-end gap-3 pt-2">
+                  <Button type="submit" className="px-4 py-2 bg-black text-white text-sm rounded-md" disabled={loading}>
+                    CREATE
+                  </Button>
+                  <Button
+                    type="button"
+                    variant="secondary"
+                    className="px-4 py-2 text-sm rounded-md"
+                    onClick={() => setForm({
+                      original_url: "",
+                      title: "",
+                      description: "",
+                      alias: "",
+                      owner: "",
+                      expiration: "",
+                      category: "",
+                      tags: "",
+                    })}
+                  >
+                    CANCEL
+                  </Button>
+                </div>
+              </form>
               {/* Right panel */}
               <div className="space-y-6 text-sm">
                 <div className="w-full h-40 bg-gray-100 rounded-md flex items-center justify-center overflow-hidden">
-                  {preview ? (
+                  {preview && codeType === "none" ? (
                     // eslint-disable-next-line @next/next/no-img-element
                     <img
-                      src={preview}
+                      src={preview || undefined}
                       alt="Preview"
                       className="w-full h-full object-cover"
                     />
                   ) : (
-                    <span className="text-gray-500">
-                      [ Link Preview Image ]
-                    </span>
+                    <span className="text-gray-500">[ Link Preview Image ]</span>
                   )}
                 </div>
-
                 <label className="border-2 border-dashed border-gray-300 rounded-md p-6 text-center text-gray-500 cursor-pointer block">
                   <input
                     type="file"
@@ -178,24 +250,9 @@ export default function NewLinkPage() {
                       setPreview(url);
                     }}
                   />
-                  Drop your image here, or browse
-                  <br />
+                  Drop your image here, or browse<br />
                   <span className="text-xs">Jpeg, png are allowed</span>
                 </label>
-                <div className="space-y-2">
-                  <div className="flex items-center justify-between bg-gray-50 px-3 py-2 rounded-md">
-                    <span>Link-thumbnail.png</span>
-                    <span className="text-indigo-600 text-xs font-medium">
-                      OK
-                    </span>
-                  </div>
-                  <div className="flex items-center justify-between bg-gray-50 px-3 py-2 rounded-md">
-                    <span>Link-thumbnail.png</span>
-                    <span className="text-indigo-600 text-xs font-medium">
-                      OK
-                    </span>
-                  </div>
-                </div>
                 {/* Code preview area: QR/Barcode, controlled by segmented toggle */}
                 {codeType !== "none" && (
                   <div className="w-full h-40 bg-white border border-dashed border-gray-300 rounded-md flex items-center justify-center">
@@ -203,26 +260,21 @@ export default function NewLinkPage() {
                       <div className="text-gray-800 font-semibold mb-1">
                         {codeType === "qrcode" ? "QR Code" : "Barcode"} Preview
                       </div>
-                      <div className="text-xs text-gray-500">
-                        Placeholder for generated {codeType}. This will update
-                        after creation.
-                      </div>
+                      {preview && codeType !== "none" ? (
+                        // eslint-disable-next-line @next/next/no-img-element
+                        <img
+                          src={preview}
+                          alt={codeType === "qrcode" ? "QR Code" : "Barcode"}
+                          className="mx-auto max-h-32"
+                        />
+                      ) : (
+                        <div className="text-xs text-gray-500">
+                          Placeholder for generated {codeType}. This will update after creation.
+                        </div>
+                      )}
                     </div>
                   </div>
                 )}
-              </div>
-
-              {/* Actions bottom */}
-              <div className="lg:col-span-3 flex justify-end gap-3 pt-2">
-                <Button className="px-4 py-2 bg-black text-white text-sm rounded-md">
-                  CREATE
-                </Button>
-                <Button
-                  variant="secondary"
-                  className="px-4 py-2 text-sm rounded-md"
-                >
-                  CANCEL
-                </Button>
               </div>
             </CardContent>
           </Card>
