@@ -43,8 +43,8 @@ export default function QRCodesPage() {
                         {item.description || item.summary}
                       </p>
                     </div>
-                      <img
-                        src={`https://linkify-images.s3.us-east-2.amazonaws.com/${item.s3_key}`}
+                    <img
+                      src={`https://linkify-images.s3.us-east-2.amazonaws.com/${item.s3_key}`}
                       alt="QR Code"
                       width={64}
                       height={64}
