@@ -11,12 +11,24 @@ import {
 import Image from "next/image";
 import NextLink from "next/link";
 import { usePathname } from "next/navigation";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 
 export default function Sidebar() {
   const [showCategories, setShowCategories] = useState(false);
   const pathname = usePathname();
+
+  // 持久化展开状态
+  useEffect(() => {
+    const stored = localStorage.getItem("sidebar_categories_open");
+    if (stored === "true") setShowCategories(true);
+  }, []);
+  useEffect(() => {
+    localStorage.setItem(
+      "sidebar_categories_open",
+      showCategories ? "true" : "false"
+    );
+  }, [showCategories]);
 
   const navItem = (href: string, label: string, icon: React.ReactNode) => {
     const active = pathname === href;
@@ -79,29 +91,47 @@ export default function Sidebar() {
           {showCategories && (
             <div className="ml-2 mt-3 space-y-3">
               <NextLink
-                href="/links"
-                className="flex justify-between items-center px-2 py-1 text-sm text-gray-600 hover:underline rounded-md"
+                href="/categories/links"
+                className="flex justify-between items-center px-2 py-1 text-sm rounded-md text-gray-600 hover:underline"
               >
                 <span>Links</span>
-                <span className="bg-indigo-600 text-white text-xs font-medium px-2 py-0.5 rounded">
+                <span
+                  className={
+                    pathname === "/categories/links"
+                      ? "bg-indigo-600 text-white text-xs font-medium px-2 py-0.5 rounded"
+                      : "bg-gray-100 text-gray-700 text-xs font-medium px-2 py-0.5 rounded"
+                  }
+                >
                   21
                 </span>
               </NextLink>
               <NextLink
-                href="/links"
-                className="flex justify-between items-center px-2 py-1 text-sm text-gray-600 hover:underline rounded-md"
+                href="/categories/qrcodes"
+                className="flex justify-between items-center px-2 py-1 text-sm rounded-md text-gray-600 hover:underline"
               >
                 <span>QR Codes</span>
-                <span className="bg-gray-100 text-gray-700 text-xs font-medium px-2 py-0.5 rounded">
+                <span
+                  className={
+                    pathname === "/categories/qrcodes"
+                      ? "bg-indigo-600 text-white text-xs font-medium px-2 py-0.5 rounded"
+                      : "bg-gray-100 text-gray-700 text-xs font-medium px-2 py-0.5 rounded"
+                  }
+                >
                   32
                 </span>
               </NextLink>
               <NextLink
-                href="/links"
-                className="flex justify-between items-center px-2 py-1 text-sm text-gray-600 hover:underline rounded-md"
+                href="/categories/barcodes"
+                className="flex justify-between items-center px-2 py-1 text-sm rounded-md text-gray-600 hover:underline"
               >
                 <span>Barcodes</span>
-                <span className="bg-gray-100 text-gray-700 text-xs font-medium px-2 py-0.5 rounded">
+                <span
+                  className={
+                    pathname === "/categories/barcodes"
+                      ? "bg-indigo-600 text-white text-xs font-medium px-2 py-0.5 rounded"
+                      : "bg-gray-100 text-gray-700 text-xs font-medium px-2 py-0.5 rounded"
+                  }
+                >
                   13
                 </span>
               </NextLink>
