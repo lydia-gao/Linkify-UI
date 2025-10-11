@@ -86,6 +86,28 @@ export const loginUser = createAsyncThunk(
   }
 );
 
+// Fetch current user (requires valid bearer token)
+export const fetchUser = createAsyncThunk(
+  "auth/fetchUser",
+  async (_, { rejectWithValue }) => {
+    try {
+      const res = await api.get("/users/");
+      return res.data as { email?: string; username?: string };
+    } catch (err: unknown) {
+      const e = err as {
+        response?: { status?: number; data?: { detail?: string } };
+        message?: string;
+      };
+      if (e?.response?.status === 401) {
+        return rejectWithValue("unauthorized");
+      }
+      return rejectWithValue(
+        e?.response?.data?.detail || e?.message || "Fetch user failed"
+      );
+    }
+  }
+);
+
 const authSlice = createSlice({
   name: "auth",
   initialState,
@@ -138,6 +160,24 @@ const authSlice = createSlice({
       .addCase(loginUser.rejected, (state, action) => {
         state.loading = false;
         state.error = (action.payload as string) ?? "Login failed";
+      })
+      // fetchUser
+      .addCase(fetchUser.pending, () => {})
+      .addCase(fetchUser.fulfilled, (state, action) => {
+        state.user = action.payload ?? null;
+      })
+      .addCase(fetchUser.rejected, (state, action) => {
+        if (action.payload === "unauthorized") {
+          state.access_token = null;
+          state.tokenType = null;
+          state.user = null;
+          if (typeof window !== "undefined") {
+            localStorage.removeItem("access_token");
+            localStorage.removeItem("token_type");
+          }
+        } else {
+          state.error = (action.payload as string) || state.error;
+        }
       });
   },
 });

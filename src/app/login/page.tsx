@@ -5,7 +5,7 @@ import Image from "next/image";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
-import { loginUser } from "@/store/slices/authSlice";
+import { loginUser, fetchUser } from "@/store/slices/authSlice";
 
 export default function LoginPage() {
   const [email, setEmail] = useState("");
@@ -13,18 +13,45 @@ export default function LoginPage() {
   const [remember, setRemember] = useState(true);
   const dispatch = useAppDispatch();
   const router = useRouter();
-  const { loading, error, access_token } = useAppSelector((s) => s.auth);
+  const { loading, error, access_token, user } = useAppSelector((s) => s.auth);
+  const [checking, setChecking] = useState(true);
 
+  // On mount, if token exists but no user, validate it; else allow login form.
   useEffect(() => {
-    if (access_token) {
-      router.push("/dashboard");
+    const token =
+      access_token ||
+      (typeof window !== "undefined"
+        ? localStorage.getItem("access_token")
+        : null);
+    if (!token) {
+      setChecking(false);
+      return;
     }
-  }, [access_token, router]);
+    if (user) {
+      router.replace("/dashboard");
+      return;
+    }
+    dispatch(fetchUser())
+      .unwrap()
+      .then(() => router.replace("/dashboard"))
+      .catch(() => {
+        // invalid token removed by slice; stay on login
+      })
+      .finally(() => setChecking(false));
+  }, [access_token, user, dispatch, router]);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     dispatch(loginUser({ username: email, password }));
   };
+
+  if (checking) {
+    return (
+      <div className="h-screen flex items-center justify-center text-sm text-gray-500">
+        Checking session...
+      </div>
+    );
+  }
 
   return (
     <div className="h-screen flex">
