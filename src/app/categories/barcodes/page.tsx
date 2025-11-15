@@ -51,7 +51,9 @@ export default function BarcodesPage() {
                       </p>
                     </div>
                     <img
-                      src={`https://linkify-images.s3.us-east-2.amazonaws.com/${item.s3_key}`}
+                      src={`${
+                        process.env.NEXT_PUBLIC_API_BASE_URL ?? ""
+                      }/barcodes/${item.barcode_id}/image`}
                       alt="Barcode"
                       width={64}
                       height={64}

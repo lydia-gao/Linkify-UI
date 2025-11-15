@@ -51,7 +51,9 @@ export default function QRCodesPage() {
                       </p>
                     </div>
                     <img
-                      src={`https://linkify-images.s3.us-east-2.amazonaws.com/${item.s3_key}`}
+                      src={`${
+                        process.env.NEXT_PUBLIC_API_BASE_URL ?? ""
+                      }/qrcodes/${item.qr_code_id}/image`}
                       alt="QR Code"
                       width={64}
                       height={64}
