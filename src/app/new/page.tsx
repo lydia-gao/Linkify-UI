@@ -6,6 +6,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { useState, useEffect } from "react";
+import { useRouter } from "next/navigation";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "@/store";
 import { createLink, resetResult } from "@/store/slices/linkSlice";
@@ -13,7 +14,14 @@ import { createLink, resetResult } from "@/store/slices/linkSlice";
 
 export default function NewLinkPage() {
   const dispatch = useDispatch<AppDispatch>();
-  type LinkResult = { id: string | number; image_url?: string } | null;
+  type LinkResult = {
+    id?: string | number;
+    image_url?: string;
+    short_url?: string;
+    short_code?: string;
+    alias?: string;
+    title?: string;
+  } | null;
   const { loading, error, result } = useSelector(
     (state: RootState) => state.link
   ) as {
@@ -35,6 +43,27 @@ export default function NewLinkPage() {
     category: "",
     tags: "",
   });
+
+  const router = useRouter();
+
+  const handleCreateAnother = () => {
+    setForm({
+      original_url: "",
+      title: "",
+      description: "",
+      alias: "",
+      owner: "",
+      expiration: "",
+      category: "",
+      tags: "",
+    });
+    dispatch(resetResult());
+    setPreview(null);
+  };
+
+  const handleViewLinks = () => {
+    router.push("/links");
+  };
 
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
@@ -74,7 +103,7 @@ export default function NewLinkPage() {
           <Card className="bg-[#fafaf8] border border-gray-200 rounded-md p-0">
             <CardContent className="p-6 grid grid-cols-1 lg:grid-cols-3 gap-6 relative">
               <form
-                className="lg:col-span-2 space-y-6 text-sm"
+                className="lg:col-span-2 space-y-6 text-sm min-w-0"
                 onSubmit={handleSubmit}
               >
                 {/* URL */}
@@ -227,15 +256,7 @@ export default function NewLinkPage() {
                 {/* Feedback */}
                 {loading && <div className="text-blue-600">Creating...</div>}
                 {error && <div className="text-red-600">Error: {error}</div>}
-                {result && (
-                  <div className="text-green-600">
-                    Created! ID:{" "}
-                    {typeof result.id === "string" ||
-                    typeof result.id === "number"
-                      ? result.id
-                      : JSON.stringify(result)}
-                  </div>
-                )}
+                {/* result message moved to right panel as a result card */}
                 {/* Actions bottom */}
                 <div className="flex justify-end gap-3 pt-2">
                   <Button
@@ -267,14 +288,14 @@ export default function NewLinkPage() {
                 </div>
               </form>
               {/* Right panel */}
-              <div className="space-y-6 text-sm">
+              <div className="space-y-6 text-sm min-w-0">
                 <div className="w-full h-40 bg-gray-100 rounded-md flex items-center justify-center overflow-hidden">
                   {preview && codeType === "none" ? (
                     // eslint-disable-next-line @next/next/no-img-element
                     <img
                       src={preview || undefined}
                       alt="Preview"
-                      className="w-full h-full object-cover"
+                      className="w-full h-full object-cover max-h-40"
                     />
                   ) : (
                     <span className="text-gray-500">
@@ -305,12 +326,12 @@ export default function NewLinkPage() {
                       <div className="text-gray-800 font-semibold mb-1">
                         {codeType === "qrcode" ? "QR Code" : "Barcode"} Preview
                       </div>
-                      {preview && codeType !== "none" ? (
+                      {preview ? (
                         // eslint-disable-next-line @next/next/no-img-element
                         <img
                           src={preview}
                           alt={codeType === "qrcode" ? "QR Code" : "Barcode"}
-                          className="mx-auto max-h-32"
+                          className="mx-auto max-h-32 max-w-full"
                         />
                       ) : (
                         <div className="text-xs text-gray-500">
@@ -320,6 +341,72 @@ export default function NewLinkPage() {
                       )}
                     </div>
                   </div>
+                )}
+                {/* Result card: shown after successful creation */}
+                {result && (
+                  <Card className="border border-green-200 bg-green-50">
+                    <CardContent className="p-3">
+                      <div className="flex items-center justify-between gap-4">
+                        <div className="min-w-0">
+                          <div className="text-sm font-semibold text-green-800 truncate">
+                            {codeType === "none"
+                              ? "Short link created"
+                              : codeType === "qrcode"
+                              ? "QR code created"
+                              : "Barcode created"}
+                          </div>
+                          {result.title && (
+                            <div className="text-xs text-green-700 mt-1 truncate">
+                              {result.title}
+                            </div>
+                          )}
+                          <div className="text-xs text-green-700 mt-1 truncate">
+                            {result.short_url ? (
+                              <a
+                                href={result.short_url}
+                                target="_blank"
+                                rel="noreferrer"
+                                className="underline"
+                              >
+                                {result.short_url}
+                              </a>
+                            ) : result.alias ? (
+                              result.alias
+                            ) : result.short_code ? (
+                              result.short_code
+                            ) : result.id ? (
+                              `ID: ${result.id}`
+                            ) : (
+                              "Created"
+                            )}
+                          </div>
+                        </div>
+                        {result.image_url && (
+                          // eslint-disable-next-line @next/next/no-img-element
+                          <img
+                            src={result.image_url}
+                            alt="code"
+                            className="h-16 object-contain max-w-[96px]"
+                          />
+                        )}
+                      </div>
+                      <div className="mt-3 flex justify-end gap-2">
+                        <Button
+                          variant="secondary"
+                          className="px-3 py-1 text-sm"
+                          onClick={handleCreateAnother}
+                        >
+                          Create another
+                        </Button>
+                        <Button
+                          className="px-3 py-1 text-sm"
+                          onClick={handleViewLinks}
+                        >
+                          View links
+                        </Button>
+                      </div>
+                    </CardContent>
+                  </Card>
                 )}
               </div>
             </CardContent>
