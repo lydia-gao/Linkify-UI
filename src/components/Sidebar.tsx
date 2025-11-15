@@ -70,7 +70,7 @@ export default function Sidebar() {
         )}
         {navItem("/analysis", "Analysis", <LineChart className="w-4 h-4" />)}
         {navItem("/links", "All Links", <LinkIcon className="w-4 h-4" />)}
-        {navItem("/test", "Click List", <List className="w-4 h-4" />)}
+        {navItem("/test", "All Opens", <List className="w-4 h-4" />)}
 
         <div className="w-44 mx-auto">
           <button

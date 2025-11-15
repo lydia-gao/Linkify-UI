@@ -381,14 +381,6 @@ export default function NewLinkPage() {
                             )}
                           </div>
                         </div>
-                        {result.image_url && (
-                          // eslint-disable-next-line @next/next/no-img-element
-                          <img
-                            src={result.image_url}
-                            alt="code"
-                            className="h-16 object-contain max-w-[96px]"
-                          />
-                        )}
                       </div>
                       <div className="mt-3 flex justify-end gap-2">
                         <Button
