@@ -5,11 +5,12 @@ import RequireAuth from "@/components/RequireAuth";
 import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { useRouter } from "next/navigation";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "@/store";
 import { createLink, resetResult } from "@/store/slices/linkSlice";
+import api from "@/lib/api/axios";
 // import api from "@/lib/api/axios";
 
 export default function NewLinkPage() {
@@ -44,6 +45,8 @@ export default function NewLinkPage() {
     tags: "",
   });
 
+  const [autoFilling, setAutoFilling] = useState(false);
+
   const router = useRouter();
 
   const handleCreateAnother = () => {
@@ -68,7 +71,51 @@ export default function NewLinkPage() {
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
-    setForm({ ...form, [e.target.name]: e.target.value });
+    const { name, value } = e.target;
+    setForm((prev) => ({ ...prev, [name]: value }));
+  };
+
+  const fetchMetadata = useCallback(async (url: string) => {
+    if (!url) return;
+    try {
+      setAutoFilling(true);
+      // Fetch title/description and maybe other metadata
+      const metaResp = await api.get("/metadata/", {
+        params: { url },
+      });
+      const meta = metaResp.data || {};
+
+      setForm((prev) => ({
+        ...prev,
+        title: prev.title || meta.title || "",
+        description: prev.description || meta.description || "",
+      }));
+
+      // Fetch preview image via redirect URL
+      try {
+        const imgResp = await api.get("/metadata/image", {
+          params: { url, redirect: true },
+        });
+        const location =
+          imgResp.request?.responseURL || imgResp.headers?.location;
+        if (location) {
+          setPreview(location);
+        }
+      } catch {
+        // ignore image errors, keep form data
+      }
+    } catch {
+      // ignore metadata errors, user can fill manually
+    } finally {
+      setAutoFilling(false);
+    }
+  }, []);
+
+  const handleUrlBlur = (e: React.FocusEvent<HTMLInputElement>) => {
+    const url = e.target.value.trim();
+    if (url) {
+      fetchMetadata(url);
+    }
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -116,8 +163,14 @@ export default function NewLinkPage() {
                     className="mt-2"
                     value={form.original_url}
                     onChange={handleChange}
+                    onBlur={handleUrlBlur}
                     required
                   />
+                  {autoFilling && (
+                    <p className="mt-1 text-xs text-gray-500">
+                      Fetching title, description and preview...
+                    </p>
+                  )}
                 </div>
                 {/* Name */}
                 <div>
